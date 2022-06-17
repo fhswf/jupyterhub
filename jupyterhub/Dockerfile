@@ -1,4 +1,8 @@
-FROM jupyterhub/jupyterhub:latest
+FROM jupyterhub/jupyterhub:2.3.1
+
+RUN pip install -U jupyterhub==2.3.1
+
+RUN jupyterhub upgrade-db
 
 COPY jupyterhub_config.py .
 
