@@ -1,4 +1,4 @@
-FROM jupyter/scipy-notebook:lab-3.4.3
+FROM jupyter/scipy-notebook:latest
 
 LABEL maintainer="My Maintainer"
 
@@ -46,7 +46,7 @@ USER $NB_UID
     #conda clean -tipsy && \
     #fix-permissions $CONDA_DIR
 
-RUN pip install -U jupyterhub==2.3.1
+RUN pip install -U jupyterhub
 
 ENV CPATH=$CONDA_DIR/include
 
