@@ -1,0 +1,50 @@
+version: '3'
+
+services:
+  jupyterhub:
+    build: jupyterhub
+    image: jupyterhub_img
+    container_name: jupyterhub
+    expose:
+      - 8000
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /var/data/jupyterhub:/srv/jupyterhub
+    environment:
+      - DOCKER_JUPYTER_CONTAINER=jupyterlab_img
+      - DOCKER_NETWORK_NAME=${COMPOSE_PROJECT_NAME}_default
+      - HUB_IP=jupyterhub
+      - HOST
+    networks:
+      - traefik
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.${COMPOSE_PROJECT_NAME}-core.rule=PathPrefix(`/newhub`)
+      #- traefik.http.routers.${COMPOSE_PROJECT_NAME}-core.middlewares=${COMPOSE_PROJECT_NAME}-core@docker
+      #- traefik.http.middlewares.${COMPOSE_PROJECT_NAME}-core.stripprefix.prefixes=/newhub
+      
+    restart: on-failure
+
+  jupyterlab:
+    build: jupyterlab
+    image: jupyterlab_img
+    container_name: jupyterlab-throaway
+    network_mode: none
+    command: echo
+
+  #reverse-proxy:
+    #image: traefik
+    #container_name: reverse-proxy
+    #ports:
+      #- "80:80"
+      #- "443:443"
+      #- "8080:8080"
+    #volumes:
+      #- ./reverse-proxy/traefik.toml:/etc/traefik/traefik.toml
+      #- /etc/certs:/etc/certs
+      #- /var/run/docker.sock:/var/run/docker.sock
+    #restart: on-failure
+
+networks:
+  traefik:
+    name: traefik
