@@ -9,7 +9,7 @@ services:
       - 8000
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - /var/data/jupyterhub:/srv/jupyterhub
+#      - /var/data/jupyterhub:/srv/jupyterhub
     environment:
       - DOCKER_JUPYTER_CONTAINER=jupyterlab_img
       - DOCKER_NETWORK_NAME=traefik
@@ -21,13 +21,14 @@ services:
     labels:
       - traefik.enable=true
       - traefik.http.routers.${COMPOSE_PROJECT_NAME}-core.rule=PathPrefix(`/newhub`)
-      #- traefik.http.routers.${COMPOSE_PROJECT_NAME}-core.middlewares=${COMPOSE_PROJECT_NAME}-core@docker
-      #- traefik.http.middlewares.${COMPOSE_PROJECT_NAME}-core.stripprefix.prefixes=/newhub
       
     restart: on-failure
 
   jupyterlab:
-    build: jupyterlab
+    build:
+      context: jupyterlab
+      args:
+        NB_USER: jupyter
     image: jupyterlab_img
     container_name: jupyterlab-throaway
     network_mode: none
