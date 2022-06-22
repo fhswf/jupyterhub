@@ -59,30 +59,34 @@ c.Spawner.cpu_limit = 1
 c.Spawner.mem_limit = '10G'
 
 # Set Permissions
-c.JupyterHub.load_roles = [
-    {
-        "name": "jupyterhub-idle-culler-role",
-        "scopes": [
-            "list:users",
-            "read:users:activity",
-            "read:servers",
-            "delete:servers",
-            # "admin:users", # if using --cull-users
-        ],
-        # assignment of role's permissions to:
-        "services": ["jupyterhub-idle-culler-service"],
-    }
-]
+# c.JupyterHub.load_roles = [
+#     {
+#         "name": "jupyterhub-idle-culler-role",
+#         "scopes": [
+#             "list:users",
+#             "read:users:activity",
+#             "read:servers",
+#             "delete:servers",
+#             # "admin:users", # if using --cull-users
+#         ],
+
+
+
+
+#         # assignment of role's permissions to:
+#         "services": ["jupyterhub-idle-culler-service"],
+#     }
+# ]
 
 # Services
-c.JupyterHub.services = [
-    {
-        "name": "jupyterhub-idle-culler-service",
-        "command": [
-            sys.executable,
-            "-m", "jupyterhub_idle_culler",
-            "--timeout=3600",
-        ],
-        # "admin": True,
-    }
-]
+# c.JupyterHub.services = [
+#     {
+#         "name": "jupyterhub-idle-culler-service",
+#         "command": [
+#             sys.executable,
+#             "-m", "jupyterhub_idle_culler",
+#             "--timeout=3600",
+#         ],
+#         # "admin": True,
+#     }
+# ]

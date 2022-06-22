@@ -12,9 +12,10 @@ services:
       - /var/data/jupyterhub:/srv/jupyterhub
     environment:
       - DOCKER_JUPYTER_CONTAINER=jupyterlab_img
-      - DOCKER_NETWORK_NAME=${COMPOSE_PROJECT_NAME}_default
+      - DOCKER_NETWORK_NAME=traefik
       - HUB_IP=jupyterhub
       - HOST
+      - JUPYTERHUB_CRYPT_KEY=${JUPYTERHUB_CRYPT_KEY}
     networks:
       - traefik
     labels:
