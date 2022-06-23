@@ -47,6 +47,10 @@ c.JupyterHub.hub_ip = os.environ['HUB_IP']
 notebook_dir = os.environ.get('DOCKER_NOTEBOOK_DIR') or '/home/user'
 c.DockerSpawner.notebook_dir = notebook_dir
 c.DockerSpawner.volumes = {'jupyterhub-user-{username}': notebook_dir}
+c.DockerSpawner.environment = {
+    'NB_USER': '${JUPYTERHUB_USER}', 
+    'CHOWN_HOME': 'yes'}
+c.DockerSpawner.extra_create_kwargs = {"user": "root"}
 
 # Other stuff
 c.Spawner.cpu_limit = 1
