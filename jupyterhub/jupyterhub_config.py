@@ -10,7 +10,6 @@
 ##
 
 from jupyterhub.auth import DummyAuthenticator
-from jupyterhub_traefik_proxy import TraefikTomlProxy
 import os
 
 # Generic
@@ -31,7 +30,6 @@ c.JupyterHub.admin_users = {"admin"}
 
 """
 GitLab
-
 from oauthenticator.gitlab import GitLabOAuthenticator
 c.JupyterHub.authenticator_class = GitLabOAuthenticator
 """
@@ -45,11 +43,13 @@ c.JupyterHub.hub_ip = os.environ['HUB_IP']
 
 # user data persistence
 # -> https://github.com/jupyterhub/dockerspawner#data-persistence-and-dockerspawner
-c.DockerSpawner.environment = {'NB_USER' : 'jupyter'}
-
-notebook_dir = os.environ.get('DOCKER_NOTEBOOK_DIR') or '/home/{username}/work'
+notebook_dir = os.environ.get('DOCKER_NOTEBOOK_DIR') or '/home/user'
 c.DockerSpawner.notebook_dir = notebook_dir
 c.DockerSpawner.volumes = {'jupyterhub-user-{username}': notebook_dir}
+c.DockerSpawner.environment = {
+    'NB_USER': '${JUPYTERHUB_USER}', 
+    'CHOWN_HOME': 'yes'}
+c.DockerSpawner.extra_create_kwargs = {"user": "root"}
 
 # Other stuff
 c.Spawner.cpu_limit = 1
@@ -70,14 +70,4 @@ c.JupyterHub.load_roles = [
     }
 ]
 
-# ------------------------------------------------------------------------------------
-# Routes Proxy settings
-# ------------------------------------------------------------------------------------
-#c.JupyterHub.proxy_class = TraefikTomlProxy
-# JupyterHub shouldn't start the proxy, it's already running
-#c.TraefikTomlProxy.should_start = True
-#c.TraefikTomlProxy.traefik_api_url = "http://auto-nlp-traefik-prod:8080"
-# traefik api endpoint login username/password
-# c.TraefikTomlProxy.traefik_api_username = "api_admin"
-# c.TraefikTomlProxy.traefik_api_password = "api_admin_pwd"
-#c.TraefikTomlProxy.traefik_log_level = "DEBUG"
+# Services
