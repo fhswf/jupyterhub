@@ -27,8 +27,6 @@ services:
   jupyterlab:
     build:
       context: jupyterlab
-      args:
-        NB_USER: jupyter
     image: jupyterlab_img
     container_name: jupyterlab-throaway
     network_mode: none
