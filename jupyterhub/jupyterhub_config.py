@@ -1,14 +1,3 @@
-# JupyterHub configuration
-#
-# If you update this file, do not forget to delete the `jupyterhub_data` volume before restarting the jupyterhub service:
-##
-# docker volume rm jupyterhub_jupyterhub_data
-##
-# or, if you changed the COMPOSE_PROJECT_NAME to <name>:
-##
-# docker volume rm <name>_jupyterhub_data
-##
-
 from jupyterhub.auth import DummyAuthenticator
 import os
 
@@ -23,16 +12,9 @@ c.JupyterHub.base_url = '/newhub/'
 c.JupyterHub.authenticator_class = 'dummy'
 
 c.DummyAuthenticator.enable_auth_state = True
-c.DummyAuthenticator.admin_users = {'admin', 'lll'}
-c.Authenticator.admin_users = {'admin', 'lll'}
+c.DummyAuthenticator.admin_users = {'admin'}
+c.Authenticator.admin_users = {'admin'}
 c.JupyterHub.admin_users = {"admin"}
-
-
-"""
-GitLab
-from oauthenticator.gitlab import GitLabOAuthenticator
-c.JupyterHub.authenticator_class = GitLabOAuthenticator
-"""
 
 # Docker spawner
 c.JupyterHub.spawner_class = 'dockerspawner.DockerSpawner'
@@ -69,5 +51,3 @@ c.JupyterHub.load_roles = [
         # "services": ["jupyterhub-idle-culler-service"],
     }
 ]
-
-# Services
