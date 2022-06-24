@@ -17,6 +17,12 @@ c.Authenticator.admin_users = {'admin'}
 c.JupyterHub.admin_users = {"admin"}
 
 # Docker spawner
+
+#c.JupyterHub.authenticator_class = 'ltiauthenticator.LTIAuthenticator'
+#c.LTIAuthenticator.consumers = {
+    #"client-key": "client-secret"
+#}
+
 c.JupyterHub.spawner_class = 'dockerspawner.DockerSpawner'
 c.DockerSpawner.image = os.environ['DOCKER_JUPYTER_CONTAINER']
 c.DockerSpawner.network_name = os.environ['DOCKER_NETWORK_NAME']
