@@ -106,7 +106,7 @@ class MultiAuthenticator(Authenticator):
 
     def get_callback_url(self, handler=None):
         """
-        This is called by oauth2, it thinks that there will just be one 
+        called by oauth2
         """
         if handler is None:
             raise ValueError("MultiAuthenticator only works with a handler")

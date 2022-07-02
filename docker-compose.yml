@@ -32,6 +32,33 @@ services:
     network_mode: none
     command: echo
 
+  postgres:
+    image: postgres:latest
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRESQL_DB}
+      POSTGRES_USER: ${POSTGRESQL_USER}
+      POSTGRES_PASSWORD: ${POSTGRESQL_PASS}
+    networks:
+      - local-keycloak
+
+  keycloak:
+    depends_on:
+      - postgres
+    container_name: local_keycloak
+    environment:
+      DB_VENDOR: postgres
+      DB_ADDR: postgres
+      DB_DATABASE: ${POSTGRESQL_DB}
+      DB_USER: ${POSTGRESQL_USER}
+      DB_PASSWORD: ${POSTGRESQL_PASS}
+    image: jboss/keycloak:${KEYCLOAK_VERSION}
+    ports:
+      - "8088:8080"
+    restart: unless-stopped
+    networks:
+      - local-keycloak
+
   #reverse-proxy:
     #image: traefik
     #container_name: reverse-proxy
@@ -46,5 +73,7 @@ services:
     #restart: on-failure
 
 networks:
+  local-keycloak:
+    name: local-keycloak
   traefik:
     name: traefik
