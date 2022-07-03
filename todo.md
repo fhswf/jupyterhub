@@ -1,0 +1,3 @@
+- [ ] Validation fixen in LTI11LaunchValidator
+- [ ] Keycloak testen in MultiAuthenticator
+- [ ] MultiLoginHandler hinzufügen in MultiAuthenticator
