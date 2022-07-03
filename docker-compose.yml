@@ -16,6 +16,10 @@ services:
       - HUB_IP=jupyterhub
       - HOST
       - JUPYTERHUB_CRYPT_KEY=${JUPYTERHUB_CRYPT_KEY}
+      - LTI_CLIENT_KEY=${LTI_CLIENT_KEY}
+      - LTI_SHARED_SECRET=${LTI_SHARED_SECRET}
+      - OAUTH_CLIENT_ID=${OAUTH_CLIENT_ID}
+      - LTI13_PRIVATE_KEY=${LTI13_PRIVATE_KEY}
     networks:
       - traefik
     labels:
@@ -41,6 +45,8 @@ services:
       POSTGRES_PASSWORD: ${POSTGRESQL_PASS}
     networks:
       - local-keycloak
+    logging:
+      driver: none
 
   keycloak:
     depends_on:
@@ -58,6 +64,8 @@ services:
     restart: unless-stopped
     networks:
       - local-keycloak
+    logging:
+      driver: none
 
   #reverse-proxy:
     #image: traefik
