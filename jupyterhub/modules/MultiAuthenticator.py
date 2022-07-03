@@ -17,14 +17,14 @@ from jupyterhub.utils import maybe_future
 
 from oauthenticator.oauth2 import OAuthLoginHandler, OAuthenticator
 from oauthenticator.generic import GenericOAuthenticator
-from ltiauthenticator import LTIAuthenticator, LTIAuthenticateHandler
+from modules.LTI11Authenticator import LTI11Authenticator as LTIAuthenticator
+#from ltiauthenticator.lti11.auth import LTI11Authenticator as LTIAuthenticator
+from ltiauthenticator.lti11.handlers import LTI11AuthenticateHandler as LTIAuthenticateHandler
 
+"""
 class MultiLoginHandler(LoginHandler):
 
     async def get(self):
-        """
-        Simplify rendering as there is no username
-        """
         self.statsd.incr('login.request')
         user = await maybe_future(self.get_current_user())
         if user:
@@ -33,7 +33,7 @@ class MultiLoginHandler(LoginHandler):
             self.set_login_cookie(self.get_current_user())
             self.redirect(self.get_next_url(user), permanent=False)
         else:
-            self.finish(self._render())
+            self.finish(self._render("login.html"))TODO """
 
 class KeycloakLogoutHandler(LogoutHandler):
     kc_logout_url = os.environ.get("KEYCLOAK_LOGOUT_URL", "")
@@ -125,7 +125,7 @@ class MultiAuthenticator(Authenticator):
 
     def get_handlers(self, app):
         h = [
-            ('/login', MultiLoginHandler),
+            # TODO ('/login', MultiLoginHandler),
             ('/logout', KeycloakLogoutHandler),
         ]
         if self.enable_keycloak:
@@ -145,6 +145,7 @@ class MultiAuthenticator(Authenticator):
         """
         Delegate authentication to the appropriate authenticator
         """
+
         if isinstance(handler, LTIAuthenticateHandler):
             return await maybe_future(self.lti_authenticator.authenticate(handler, data))
         else:

@@ -1,19 +1,25 @@
 from jupyterhub.auth import DummyAuthenticator
+from modules.MultiAuthenticator import MultiAuthenticator
 import os
 
 # Generic
 c.JupyterHub.admin_access = True
 c.Spawner.default_url = '/lab'
-
-# Temporary base_url for testing behind reverse proxy
 c.JupyterHub.base_url = '/newhub/'
 
-# Authenticator
-c.JupyterHub.authenticator_class = 'dummy'
+# Set log level
+c.Application.log_level = "DEBUG"
 
-c.DummyAuthenticator.enable_auth_state = True
-c.DummyAuthenticator.admin_users = {'admin'}
-c.Authenticator.admin_users = {'admin'}
+# Add an admin user for testing the admin page
+c.Authenticator.admin_users = {"admin"}
+
+# Enable auth state to pass the authentication dictionary
+# auth_state to ths spawner
+c.Authenticator.enable_auth_state = False
+
+# Set the LTI 1.1 authenticator.
+c.JupyterHub.authenticator_class = MultiAuthenticator
+
 c.JupyterHub.admin_users = {"admin"}
 
 # Docker spawner
