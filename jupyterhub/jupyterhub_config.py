@@ -4,6 +4,7 @@ import os
 
 # Generic
 c.JupyterHub.admin_access = True
+c.JupyterHub.template_paths = ['templates']
 c.Spawner.default_url = '/lab'
 c.JupyterHub.base_url = '/newhub/'
 

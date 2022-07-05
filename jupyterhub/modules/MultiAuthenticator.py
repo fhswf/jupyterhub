@@ -20,20 +20,66 @@ from oauthenticator.generic import GenericOAuthenticator
 from modules.LTI11Authenticator import LTI11Authenticator as LTIAuthenticator
 #from ltiauthenticator.lti11.auth import LTI11Authenticator as LTIAuthenticator
 from ltiauthenticator.lti11.handlers import LTI11AuthenticateHandler as LTIAuthenticateHandler
+from jinja2 import Template, Environment, FileSystemLoader
 
-"""
 class MultiLoginHandler(LoginHandler):
 
+    async def _render(self, login_error=None):
+        """
+        Mainly changes the template, also simplify a bit
+        """
+        nextval = self.get_argument('next', default='')
+
+        context = [
+            {
+                'name': 'keycloak',
+                'label': 'Keycloak',
+                'login_url': '{}://{}{}keycloak/login?next={}'.format(self.request.protocol, self.request.host, self.hub.base_url, url_escape(nextval)),
+                'enabled': self.authenticator.enable_keycloak,
+            },
+            {
+                'name': 'lti',
+                'label': 'Moodle',
+                'login_url': '{}://{}{}lti/launch?next={}'.format(self.request.protocol, self.request.host, self.hub.base_url, url_escape(nextval)),
+                'enabled': self.authenticator.enable_lti,
+            },
+        ]
+
+        return await self.render_template("login.html",
+            multiauth=context,
+            login_error=login_error,
+        )
+
+    async def post(self):
+        """
+        Redirect to the handler for the appropriate oauth selected
+        """
+        concat_data = {
+            'next': self.get_argument('next', ''),
+        }
+        if self.authenticator.enable_keycloak and self.get_argument('login_keycloak', None):
+            login_url = '{}://{}:8088{}keycloak/login'.format(self.request.protocol, self.request.host, self.hub.base_url)
+            self.redirect(url_concat(login_url, concat_data))
+        elif self.authenticator.enable_lti and self.get_argument('login_lti', None):
+            login_url = '{}://{}{}lti/launch'.format(self.request.protocol, self.request.host, self.hub.base_url)
+            self.redirect(url_concat(login_url, concat_data))
+        else:
+            html = await self._render(login_error='Unknown or missing authenticator')
+            self.finish(html)
+
     async def get(self):
+        """
+        Simplify rendering as there is no username
+        """
         self.statsd.incr('login.request')
-        user = await maybe_future(self.get_current_user())
+        user = await self.get_current_user()
         if user:
             # set new login cookie
             # because single-user cookie may have been cleared or incorrect
             self.set_login_cookie(self.get_current_user())
             self.redirect(self.get_next_url(user), permanent=False)
         else:
-            self.finish(self._render("login.html"))TODO """
+            self.finish(await self._render())
 
 class KeycloakLogoutHandler(LogoutHandler):
     kc_logout_url = os.environ.get("KEYCLOAK_LOGOUT_URL", "")
@@ -58,6 +104,12 @@ class MultiAuthenticator(Authenticator):
 
     keycloak_authenticator = Instance(OAuthenticator)
     lti_authenticator = Instance(Authenticator)
+
+    extra_authorize_params = Dict(
+        config=True,
+        help="""Extra GET params to send along with the initial OAuth request
+        to the OAuth provider.""",
+    )
 
     @default('keycloak_authenticator')
     def _default_keycloak_authenticator(self):
@@ -125,11 +177,12 @@ class MultiAuthenticator(Authenticator):
 
     def get_handlers(self, app):
         h = [
-            # TODO ('/login', MultiLoginHandler),
+            ('/login', MultiLoginHandler),
             ('/logout', KeycloakLogoutHandler),
         ]
         if self.enable_keycloak:
             handlers = dict(self.keycloak_authenticator.get_handlers(app))
+
             h.extend([
                 ('/keycloak/login', handlers['/oauth_login']),
                 ('/keycloak/callback', handlers['/oauth_callback'])
@@ -137,7 +190,7 @@ class MultiAuthenticator(Authenticator):
         if self.enable_lti:
             handlers = dict(self.lti_authenticator.get_handlers(app))
             h.extend([
-                ('/lti/launch', handlers['/lti/launch'])
+                ('/lti/launch', handlers['/lti/launch']),
             ])
         return h
 
