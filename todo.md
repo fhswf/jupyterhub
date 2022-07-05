@@ -1,3 +1,8 @@
 - [ ] Validation fixen in LTI11LaunchValidator
-- [ ] Keycloak testen in MultiAuthenticator
-- [ ] MultiLoginHandler hinzufügen in MultiAuthenticator
+- [ ] MultiAuthenticator login url in .env hinzufügen
+- [ ] MultiAuthenticator logout url in .env hinzufügen
+- [ ] MultiAuthenticator Keycloak redirect loop fixen
+- [ ] Keycloak über single sign on hinzufügen
+
+- [ ] Dateien kommentieren
+- [ ] Dateien aufräumen
