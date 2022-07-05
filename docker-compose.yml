@@ -20,6 +20,7 @@ services:
       - LTI_SHARED_SECRET=${LTI_SHARED_SECRET}
       - OAUTH_CLIENT_ID=${OAUTH_CLIENT_ID}
       - LTI13_PRIVATE_KEY=${LTI13_PRIVATE_KEY}
+      - KEYCLOAK_LOGOUT_URL=${KEYCLOAK_LOGOUT_URL}
     networks:
       - traefik
     labels:
