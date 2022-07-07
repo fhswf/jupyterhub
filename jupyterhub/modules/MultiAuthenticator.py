@@ -50,15 +50,16 @@ class MultiLoginHandler(LoginHandler):
             login_error=login_error,
         )
 
+    # FIXME: deprecated
     async def post(self):
         """
         Redirect to the handler for the appropriate oauth selected
         """
         concat_data = {
-            'next': self.get_argument('next', ''),
+            'redirect_uri': self.get_argument('redirect_uri', ''),
         }
         if self.authenticator.enable_keycloak and self.get_argument('login_keycloak', None):
-            login_url = '{}://{}:8088{}keycloak/login'.format(self.request.protocol, self.request.host, self.hub.base_url)
+            login_url = 'http://localhost:8088/auth/realms/master/account/#/'
             self.redirect(url_concat(login_url, concat_data))
         elif self.authenticator.enable_lti and self.get_argument('login_lti', None):
             login_url = '{}://{}{}lti/launch'.format(self.request.protocol, self.request.host, self.hub.base_url)
@@ -167,14 +168,13 @@ class MultiAuthenticator(Authenticator):
             if self.keycloak_authenticator.oauth_callback_url:
                 return self.keycloak_authenticator.oauth_callback_url
         parts = urlsplit(handler.request.uri)
-        callback_url = '{}://{}{}'.format(
+        callback_url = '{}://{}{}/newhub'.format(
             handler.request.protocol,
             handler.request.host,
             parts.path.replace('/login', '/callback')
         )
         return callback_url
     
-
     def get_handlers(self, app):
         h = [
             ('/login', MultiLoginHandler),
