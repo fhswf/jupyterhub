@@ -4,6 +4,7 @@ from typing import Any, Dict
 
 from oauthlib.oauth1.rfc5849 import signature
 from tornado.web import HTTPError
+from tornado import web
 from traitlets.config import LoggingConfigurable
 
 from ltiauthenticator.lti11.constants import LTI11_LAUNCH_PARAMS_REQUIRED, LTI11_OAUTH_ARGS
@@ -29,6 +30,7 @@ class LTI11LaunchValidator(LoggingConfigurable):
     ):
         """
         Validate a given launch request
+
         launch_url: Full URL that the launch request was POSTed to
         headers: k/v pair of HTTP headers coming in with the POST
         args: dictionary of body arguments passed to the launch_url
@@ -85,13 +87,21 @@ class LTI11LaunchValidator(LoggingConfigurable):
             )
         )
 
+        print(f"launch_url: {launch_url}")
+
         consumer_secret = self.consumers[args['oauth_consumer_key']]
+
+        print(f"Consumer secret: {consumer_secret}")
+        print(f"Consumer key: {args['oauth_consumer_key']}")
 
         sign = signature.sign_hmac_sha1(base_string, consumer_secret, None)
         is_valid = signature.safe_string_equals(sign, args['oauth_signature'])
-        
-        # FIXME: validation not working
+
+        print(f"Sign: {sign}")
+        print(f"is valid: {is_valid}")
+        print(f"Oauth sign: {args['oauth_signature']}")
+
         if not is_valid:
-            raise HTTPError(401, "Invalid oauth_signature")
+            raise web.HTTPError(401, "Invalid oauth_signature")
 
         return True

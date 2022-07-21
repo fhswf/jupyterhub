@@ -18,6 +18,7 @@ from jupyterhub.utils import maybe_future
 from oauthenticator.oauth2 import OAuthLoginHandler, OAuthenticator
 from oauthenticator.generic import GenericOAuthenticator
 from modules.LTI11Authenticator import LTI11Authenticator as LTIAuthenticator
+from modules.LTI11AuthenticateHandler import LTI11AuthenticateHandler as LTIAuthenticateHandler
 #from ltiauthenticator.lti11.auth import LTI11Authenticator as LTIAuthenticator
 from ltiauthenticator.lti11.handlers import LTI11AuthenticateHandler as LTIAuthenticateHandler
 from jinja2 import Template, Environment, FileSystemLoader
@@ -190,7 +191,7 @@ class MultiAuthenticator(Authenticator):
         if self.enable_lti:
             handlers = dict(self.lti_authenticator.get_handlers(app))
             h.extend([
-                ('/lti/launch', handlers['/lti/launch']),
+                ('/lti/launch', LTIAuthenticateHandler),
             ])
         return h
 

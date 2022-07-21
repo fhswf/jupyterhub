@@ -8,7 +8,9 @@ from tornado import gen
 from tornado.web import HTTPError
 from traitlets.config import Dict, Unicode
 
-from ltiauthenticator.lti11.handlers import LTI11AuthenticateHandler as LTIAuthenticateHandler, LTI11ConfigHandler as LTIConfigHandler
+from ltiauthenticator.lti11.handlers import LTI11ConfigHandler as LTIConfigHandler
+#from ltiauthenticator.lti11.handlers import LTI11AuthenticateHandler as LTIAuthenticateHandler, LTI11ConfigHandler as LTIConfigHandler
+from modules.LTI11AuthenticateHandler import LTI11AuthenticateHandler as LTIAuthenticateHandler
 from modules.LTI11LaunchValidator import LTI11LaunchValidator as LTILaunchValidator
 #from ltiauthenticator.lti11.validator import LTI11LaunchValidator
 from ltiauthenticator.utils import convert_request_to_dict, get_client_protocol
@@ -53,7 +55,8 @@ class LTI11Authenticator(Authenticator):
         else:
             protocol = handler.request.protocol
 
-        launch_url = protocol + "://" + handler.request.host + handler.request.uri
+        #launch_url = protocol + "://" + handler.request.host + handler.request.uri
+        launch_url = "https://" + handler.request.host + handler.request.uri
 
         if validator.validate_launch_request(
                 launch_url,
