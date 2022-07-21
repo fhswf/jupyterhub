@@ -1,40 +1,42 @@
 from jupyterhub.auth import DummyAuthenticator
 from modules.MultiAuthenticator import MultiAuthenticator
 import os
+import sys
 
-# Generic
+
+#===========================================================================
+#                            General Configuration
+#===========================================================================
+
 c.JupyterHub.admin_access = True
 c.JupyterHub.template_paths = ['templates']
+c.Application.log_level = "DEBUG"
+
 c.Spawner.default_url = '/lab'
 c.JupyterHub.base_url = '/newhub/'
 
-# Set log level
-c.Application.log_level = "DEBUG"
-
-# Add an admin user for testing the admin page
 c.Authenticator.admin_users = {"admin"}
 
 # Enable auth state to pass the authentication dictionary
-# auth_state to ths spawner
+# auth_state to the spawner
 c.Authenticator.enable_auth_state = False
 
-# Set the LTI 1.1 authenticator.
+# Set the MultiAuthenticator as the authenticator
 c.JupyterHub.authenticator_class = MultiAuthenticator
 
-c.JupyterHub.admin_users = {"admin"}
 
-# Docker spawner
-
-#c.JupyterHub.authenticator_class = 'ltiauthenticator.LTIAuthenticator'
-#c.LTIAuthenticator.consumers = {
-    #"client-key": "client-secret"
-#}
+#===========================================================================
+#                            Docker Spawner Configuration
+#===========================================================================
 
 c.JupyterHub.spawner_class = 'dockerspawner.DockerSpawner'
 c.DockerSpawner.image = os.environ['DOCKER_JUPYTER_CONTAINER']
 c.DockerSpawner.network_name = os.environ['DOCKER_NETWORK_NAME']
+
 # -> https://github.com/jupyterhub/dockerspawner/blob/master/examples/oauth/jupyterhub_config.py
 c.JupyterHub.hub_ip = os.environ['HUB_IP']
+
+c.JupyterHub.shutdown_on_logout = True
 
 # user data persistence
 # -> https://github.com/jupyterhub/dockerspawner#data-persistence-and-dockerspawner
@@ -46,7 +48,11 @@ c.DockerSpawner.environment = {
     'CHOWN_HOME': 'yes'}
 c.DockerSpawner.extra_create_kwargs = {"user": "root"}
 
-# Other stuff
+
+#===========================================================================
+#                            Other Configuration
+#===========================================================================
+
 c.Spawner.cpu_limit = 1
 c.Spawner.mem_limit = '10G'
 
@@ -60,7 +66,29 @@ c.JupyterHub.load_roles = [
             "delete:servers",
                 # "admin:users", # if using --cull-users
         ]
+    },
+    {
+        "name": "jupyterhub-idle-culler-role",
+        "scopes": [
+            "list:users",
+            "read:users:activity",
+            "read:servers",
+            "delete:servers",
+            # "admin:users", # if using --cull-users
+        ],
         # assignment of role's permissions to:
-        # "services": ["jupyterhub-idle-culler-service"],
+        "services": ["jupyterhub-idle-culler-service"],
+    }
+]
+
+c.JupyterHub.services = [
+    {
+        "name": "jupyterhub-idle-culler-service",
+        "command": [
+            sys.executable,
+            "-m", "jupyterhub_idle_culler",
+            "--timeout=3600",
+        ],
+        # "admin": True,
     }
 ]

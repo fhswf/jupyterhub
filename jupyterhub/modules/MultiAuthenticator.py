@@ -179,7 +179,7 @@ class MultiAuthenticator(Authenticator):
     def get_handlers(self, app):
         h = [
             ('/login', MultiLoginHandler),
-            ('/logout', KeycloakLogoutHandler),
+            #('/logout', KeycloakLogoutHandler),
         ]
         if self.enable_keycloak:
             handlers = dict(self.keycloak_authenticator.get_handlers(app))
