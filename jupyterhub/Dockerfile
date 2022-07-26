@@ -13,7 +13,3 @@ RUN pip install \
     dockerspawner \
     jupyterhub-traefik-proxy \
     MultiAuthenticator
-
-RUN mkdir -p /home/user/.ssh
-COPY private.pem /home/user/.ssh/private.pem
-COPY public.pem /home/user/.ssh/public.pem
