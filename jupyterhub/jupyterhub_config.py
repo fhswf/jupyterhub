@@ -19,7 +19,7 @@ c.Authenticator.admin_users = {"admin"}
 
 # Enable auth state to pass the authentication dictionary
 # auth_state to the spawner
-c.Authenticator.enable_auth_state = False
+c.Authenticator.enable_auth_state = True
 
 # Set the MultiAuthenticator as the authenticator
 c.JupyterHub.authenticator_class = MultiAuthenticator
@@ -40,12 +40,10 @@ c.JupyterHub.shutdown_on_logout = True
 
 # user data persistence
 # -> https://github.com/jupyterhub/dockerspawner#data-persistence-and-dockerspawner
-notebook_dir = os.environ.get('DOCKER_NOTEBOOK_DIR') or '/home/user'
+notebook_dir = os.environ.get('DOCKER_NOTEBOOK_DIR') or '/home/jovyan/work'
 c.DockerSpawner.notebook_dir = notebook_dir
 c.DockerSpawner.volumes = {'jupyterhub-user-{username}': notebook_dir}
-c.DockerSpawner.environment = {
-    'NB_USER': '${JUPYTERHUB_USER}', 
-    'CHOWN_HOME': 'yes'}
+
 c.DockerSpawner.extra_create_kwargs = {"user": "root"}
 
 
