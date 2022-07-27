@@ -204,3 +204,24 @@ class MultiAuthenticator(Authenticator):
             return await maybe_future(self.lti_authenticator.authenticate(handler, data))
         else:
             return await maybe_future(self.keycloak_authenticator.authenticate(handler, data))
+
+    async def pre_spawn_start(self, user, spawner):
+        """
+        Prespawn to set NB_USER to username to ensure shown user in e.g. Terminal
+        is set to the username.
+
+        Make sure to enable auth_state, otherwise this function wont work.
+        """
+
+        auth_state = await user.get_auth_state()
+        if not auth_state:
+            # auth_state not enabled
+            return
+
+        spawner.environment = {
+            'NB_USER': spawner.user.name,
+            # FIXME: Optional ARGS. Fix owning of work directory to use without grant sudo
+            # 'NB_UID': auth_state['user_id'],
+            # 'CHOWN_HOME': 'yes',
+            # 'GRANT_SUDO': 'yes',
+        }
