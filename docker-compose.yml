@@ -3,7 +3,7 @@ version: '3'
 services:
   jupyterhub:
     build: jupyterhub
-    image: jupyterhub_img
+    image: ghcr.io/fhswf/jupyterhub_hub:main
     container_name: jupyterhub
     expose:
       - 8000
@@ -29,7 +29,7 @@ services:
       context: jupyterlab
       args:
         NB_USER: jupyter
-    image: jupyterlab_img
+    image: ghcr.io/fhswf/jupyterhub_lab:main
     container_name: jupyterlab-throaway
     network_mode: none
     command: echo
