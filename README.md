@@ -1,4 +1,3 @@
 # Spawn Jupyterlabs in dockercontainer!
 ---
-
-![docker build](https://github.com/github/docs/actions/workflows/docker-image.yml/badge.svg)
+[![Docker Image CI](https://github.com/fhswf/jupyterhub/actions/workflows/docker-image.yml/badge.svg)](https://github.com/fhswf/jupyterhub/actions/workflows/docker-image.yml)
