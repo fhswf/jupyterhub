@@ -15,8 +15,10 @@ from jupyterhub.auth import Authenticator
 from jupyterhub.handlers.login import LoginHandler, LogoutHandler
 from jupyterhub.utils import maybe_future
 
-from oauthenticator.oauth2 import OAuthLoginHandler, OAuthenticator
-from oauthenticator.generic import GenericOAuthenticator
+# from oauthenticator.oauth2 import OAuthLoginHandler, OAuthenticator
+# from oauthenticator.generic import GenericOAuthenticator
+from modules.oauth2 import OAuthLoginHandler, OAuthenticator
+from modules.generic import GenericOAuthenticator
 from modules.LTI11Authenticator import LTI11Authenticator as LTIAuthenticator
 from modules.LTI11AuthenticateHandler import LTI11AuthenticateHandler as LTIAuthenticateHandler
 #from ltiauthenticator.lti11.auth import LTI11Authenticator as LTIAuthenticator
@@ -41,7 +43,7 @@ class MultiLoginHandler(LoginHandler):
             {
                 'name': 'lti',
                 'label': 'Moodle',
-                'login_url': '{}://{}{}lti/launch?next={}'.format(self.request.protocol, self.request.host, self.hub.base_url, url_escape(nextval)),
+                'login_url': 'https://elearning.fh-swf.de'.format(self.request.protocol, self.request.host, self.hub.base_url, url_escape(nextval)),
                 'enabled': self.authenticator.enable_lti,
             },
         ]
@@ -50,24 +52,6 @@ class MultiLoginHandler(LoginHandler):
             multiauth=context,
             login_error=login_error,
         )
-
-    # FIXME: deprecated
-    async def post(self):
-        """
-        Redirect to the handler for the appropriate oauth selected
-        """
-        concat_data = {
-            'redirect_uri': self.get_argument('redirect_uri', ''),
-        }
-        if self.authenticator.enable_keycloak and self.get_argument('login_keycloak', None):
-            login_url = 'http://localhost:8088/auth/realms/master/account/#/'
-            self.redirect(url_concat(login_url, concat_data))
-        elif self.authenticator.enable_lti and self.get_argument('login_lti', None):
-            login_url = '{}://{}{}lti/launch'.format(self.request.protocol, self.request.host, self.hub.base_url)
-            self.redirect(url_concat(login_url, concat_data))
-        else:
-            html = await self._render(login_error='Unknown or missing authenticator')
-            self.finish(html)
 
     async def get(self):
         """
@@ -82,19 +66,6 @@ class MultiLoginHandler(LoginHandler):
             self.redirect(self.get_next_url(user), permanent=False)
         else:
             self.finish(await self._render())
-
-class KeycloakLogoutHandler(LogoutHandler):
-    kc_logout_url = os.environ.get("KEYCLOAK_LOGOUT_URL", "")
-
-    async def get(self):
-        # redirect to keycloak logout url and redirect back with kc=true parameters
-        # then proceed with the original logout method.
-        logout_kc = self.get_argument('kc', '')
-        if logout_kc != 'true':
-            logout_url = self.request.full_url() + '?kc=true'
-            self.redirect(self.kc_logout_url + '?' + urlencode({ 'redirect_uri' : logout_url}))
-        else:
-            await super().get()
 
 class MultiAuthenticator(Authenticator):
 
@@ -127,7 +98,6 @@ class MultiAuthenticator(Authenticator):
         self.__client_secret = None
         self.__consumers = None
         self.__authorize_url = None
-        self.__scope = None
     
     @property
     def authorize_url(self):
@@ -179,7 +149,6 @@ class MultiAuthenticator(Authenticator):
     def get_handlers(self, app):
         h = [
             ('/login', MultiLoginHandler),
-            #('/logout', KeycloakLogoutHandler),
         ]
         if self.enable_keycloak:
             handlers = dict(self.keycloak_authenticator.get_handlers(app))

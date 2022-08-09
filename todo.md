@@ -1,8 +1,0 @@
-- [ ] Keycloak über single sign on hinzufügen?
-- [ ] FIXME: tornado.curl_httpclient.CurlError: HTTP 599: Failed to connect to localhost port 8088: Connection refused after authentication
-- [ ] FIXME: Keycloak wird regelmäßig zurückgesetzt
-- [ ] dateien vergleichen mit running file -> less /opt/tljh/hub/lib/python3.7/site-packages/ltiauthenticator/__init__.py
-- [ ] Logout handler für moodle hinzufügen
-
-- [ ] Dateien kommentieren
-- [ ] Dateien aufräumen
