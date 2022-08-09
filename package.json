@@ -1,7 +1,7 @@
 {
     "name": "jupyterhub-with-dockerspawner",
     "version": "1.0.0",
-    "description": "",
+    "description": "Jupyterhub with dockerspawner and multi authentication with lti and keycloak",
     "author": "Fachhochschule Südwestfalen",
     "license": ""
 }
