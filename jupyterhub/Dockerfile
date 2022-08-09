@@ -1,8 +1,15 @@
 FROM jupyterhub/jupyterhub:latest
 
-COPY jupyterhub_config.py .
+ENV PYTHONUNBUFFERED=1
+
+COPY . ./
+
+RUN pip install .
 
 RUN pip install \
+    oauthenticator \
+    jupyterhub-ltiauthenticator \
     jupyterhub-idle-culler \
     dockerspawner \
-    jhub_cas_authenticator
+    jupyterhub-traefik-proxy \
+    MultiAuthenticator

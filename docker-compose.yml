@@ -16,23 +16,91 @@ services:
       - HUB_IP=jupyterhub
       - HOST
       - JUPYTERHUB_CRYPT_KEY=${JUPYTERHUB_CRYPT_KEY}
+      
+      - LTI_CLIENT_KEY=${LTI_CLIENT_KEY}
+      - LTI_SHARED_SECRET=${LTI_SHARED_SECRET}
+      - LTI13_PRIVATE_KEY=${LTI13_PRIVATE_KEY}
+
+      - KEYCLOAK_LOGOUT_URL=${KEYCLOAK_LOGOUT_URL}
+
+      - OAUTH2_TLS_VERIFY=${OAUTH2_TLS_VERIFY}
+      - OAUTH2_AUTHORIZE_URL=${OAUTH2_AUTHORIZE_URL}
+      # because here we have communicate internally, "jupiter.fh-swf.de" gets block by fh-swf rev. proxy 
+      - OAUTH2_TOKEN_URL=${OAUTH2_INTERNAL_TOKEN_URL}
+      #- OAUTH2_TOKEN_URL=${OAUTH2_TOKEN_URL}
+      - OAUTH_CLIENT_ID=${OAUTH_CLIENT_ID}
+      - OAUTH_CLIENT_SECRET=${OAUTH_CLIENT_SECRET}
+      - OAUTH_CALLBACK_URL=${OAUTH_CALLBACK_URL}
+      - OAUTH2_USERDATA_URL=${OAUTH2_INTERNAL_USERDATA_URL}
     networks:
       - traefik
     labels:
       - traefik.enable=true
       - traefik.http.routers.${COMPOSE_PROJECT_NAME}-core.rule=PathPrefix(`/newhub`)
-      
     restart: on-failure
 
   jupyterlab:
     build:
       context: jupyterlab
-      args:
-        NB_USER: jupyter
-    image: ghcr.io/fhswf/jupyterhub_lab:main
-    container_name: jupyterlab-throaway
-    network_mode: none
-    command: echo
+      image: ghcr.io/fhswf/jupyterhub_lab:main
+
+  postgres:
+    image: postgres:latest
+    restart: unless-stopped
+    volumes:
+      - keycloak_database:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: ${POSTGRESQL_DB}
+      POSTGRES_USER: ${POSTGRESQL_USER}
+      POSTGRES_PASSWORD: ${POSTGRESQL_PASS}
+    networks:
+      - traefik
+    logging:
+      driver: none
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:latest
+    container_name: local_keycloak
+    # only required if database is not persisted
+    #volumes:
+    #  - /opt/keycloak/data:/opt/keycloak/data
+    depends_on:
+      - postgres
+    environment:
+      KC_DB: postgres
+      KC_DB_URL: 'jdbc:postgresql://postgres/keycloak'
+      #DB_ADDR: postgres
+      #KC_DB_DATABASE: ${POSTGRESQL_DB}
+      KC_DB_USERNAME: ${POSTGRESQL_USER}
+      KC_DB_PASSWORD: ${POSTGRESQL_PASS}
+      KC_HTTP_ENABLED: "true"
+      # PROXY_ADDRESS_FORWARDING: "true"
+      # KEYCLOAK_ADMIN: admin
+      # KEYCLOAK_ADMIN_PASSWORD: admin
+      # HTTP_ADDRESS_FORWARDING: 'true'
+
+      KC_LOG_LEVEL: INFO
+      KC_HTTP_RELATIVE_PATH: /keycloak
+      PROXY_ADDRESS_FORWARDING: "true"
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+      KC_HOSTNAME: jupiter.fh-swf.de
+      KC_HOSTNAME_STRICT_HTTPS: 'true'
+      KC_PROXY: 'edge'
+      
+    command:
+      # we might have to remove auto-build at some point 
+      - "start"
+      - "--auto-build"
+
+    ports:
+      - "8088:8080"
+    restart: unless-stopped
+    networks:
+      - traefik
+    #labels:
+      #- traefik.enable=true
+      #- traefik.http.routers.${COMPOSE_PROJECT_NAME}-core.rule=PathPrefix(`/keycloak`)
 
   #reverse-proxy:
     #image: traefik
@@ -47,6 +115,13 @@ services:
       #- /var/run/docker.sock:/var/run/docker.sock
     #restart: on-failure
 
+volumes:
+  keycloak_database:
+    driver: local
+
+
 networks:
+  local-keycloak:
+    name: local-keycloak
   traefik:
     name: traefik
