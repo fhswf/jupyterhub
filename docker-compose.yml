@@ -43,6 +43,13 @@ services:
     build:
       context: jupyterlab
     image: ghcr.io/fhswf/jupyterhub_lab:main
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
 
   postgres:
     image: postgres:latest
