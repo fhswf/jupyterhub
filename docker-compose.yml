@@ -3,7 +3,7 @@ version: '3'
 services:
   jupyterhub:
     build: jupyterhub
-    image: jupyterhub_img
+    image: ghcr.io/fhswf/jupyterhub_hub:main
     container_name: jupyterhub
     expose:
       - 8000
@@ -40,10 +40,7 @@ services:
   jupyterlab:
     build:
       context: jupyterlab
-    image: jupyterlab_img
-    container_name: jupyterlab-throaway
-    network_mode: none
-    command: echo
+      image: ghcr.io/fhswf/jupyterhub_lab:main
 
   postgres:
     image: postgres:latest

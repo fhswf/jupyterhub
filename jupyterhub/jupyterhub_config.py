@@ -43,6 +43,10 @@ c.JupyterHub.shutdown_on_logout = True
 notebook_dir = os.environ.get('DOCKER_NOTEBOOK_DIR') or '/home/jovyan/work'
 c.DockerSpawner.notebook_dir = notebook_dir
 c.DockerSpawner.volumes = {'jupyterhub-user-{username}': notebook_dir}
+c.DockerSpawner.environment = {
+    'NB_USER': '${JUPYTERHUB_USER}', 
+    'CHOWN_HOME': 'yes'}
+c.DockerSpawner.extra_create_kwargs = {"user": "root"}
 
 c.DockerSpawner.extra_create_kwargs = {"user": "root"}
 
