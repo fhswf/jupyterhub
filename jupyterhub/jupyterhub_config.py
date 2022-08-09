@@ -48,8 +48,6 @@ c.DockerSpawner.environment = {
     'CHOWN_HOME': 'yes'}
 c.DockerSpawner.extra_create_kwargs = {"user": "root"}
 
-c.DockerSpawner.extra_create_kwargs = {"user": "root"}
-
 
 #===========================================================================
 #                            Other Configuration
