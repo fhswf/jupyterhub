@@ -54,7 +54,7 @@ notebook_dir = os.environ.get('DOCKER_NOTEBOOK_DIR') or '/home/jovyan/work'
 c.DockerSpawner.notebook_dir = notebook_dir
 c.DockerSpawner.volumes = {'jupyterhub-user-{username}': notebook_dir}
 c.DockerSpawner.environment = {
-    'My_test_ev': "hello wrold",
+    'My_test_ev': "hellowrold",
     'NB_USER': '${JUPYTERHUB_USER}', 
     'CHOWN_HOME': 'yes',
     'NVIDIA_VISIBLE_DEVICES':1,
@@ -62,13 +62,14 @@ c.DockerSpawner.environment = {
     }
 c.DockerSpawner.extra_create_kwargs = {"user": "root"}
 
+# somehow we need to pass env args that get expected...
 #c.Spawner.environment = {
 #    'Mytestev': "foobar",
 #    'NVIDIA_VISIBLE_DEVICES':1
 #}
 
 #c.Spawner.args = ["--gpus all", "-e MyotherTest hellp"]
-c.Spawner.args = ["--gpus all", "-e NVIDIA_VISIBLE_DEVICES':2"]
+#c.Spawner.args = ["--gpus all", "-e NVIDIA_VISIBLE_DEVICES':2"]
 
 
 if os.environ.get('CONTAINER_SPAWN_ENVS'):
