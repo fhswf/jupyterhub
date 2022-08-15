@@ -20,7 +20,7 @@ jobs:
     with:
       image: jupyterhub
 
-  build-and-push-lab-cpu:
+  build-and-push-lab:
     uses: ./.github/workflows/reusable-docker-build-push.yml
     with:
       image: jupyterlab
