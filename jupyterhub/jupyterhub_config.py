@@ -35,7 +35,7 @@ c.DockerSpawner.network_name = os.environ['DOCKER_NETWORK_NAME']
 c.DockerSpawner.allowed_images = os.environ['DOCKER_JUPYTER_CONTAINERS'].split(",")
 c.Spawner.remove = True
 
-c.Spawner.http_timeout=60
+c.Spawner.http_timeout=120
 c.Spawner.start_timeout=300
 #[
 #    "jupyterlab_img",
@@ -58,17 +58,17 @@ c.DockerSpawner.environment = {
     'NB_USER': '${JUPYTERHUB_USER}', 
     'CHOWN_HOME': 'yes',
     'NVIDIA_VISIBLE_DEVICES':1,
-    'my_test_envvar2': '=42 --gpus all'
+    #'my_test_envvar2': '=42 --gpus all'
     }
 c.DockerSpawner.extra_create_kwargs = {"user": "root"}
 
-c.Spawner.environment = {
-    'Mytestev': "foobar",
-    'NVIDIA_VISIBLE_DEVICES':1
-}
+#c.Spawner.environment = {
+#    'Mytestev': "foobar",
+#    'NVIDIA_VISIBLE_DEVICES':1
+#}
 
-c.Spawner.args = ["--gpus all", "-e MyotherTest hellp"]
-c.DockerSpawner.args = ["--gpus all", "-e MyotherTest helllllll"]
+#c.Spawner.args = ["--gpus all", "-e MyotherTest hellp"]
+c.DockerSpawner.args = ["--gpus all", "-e NVIDIA_VISIBLE_DEVICES':2"]
 
 
 if os.environ.get('CONTAINER_SPAWN_ENVS'):
