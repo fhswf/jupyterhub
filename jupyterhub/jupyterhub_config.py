@@ -60,7 +60,7 @@ c.DockerSpawner.extra_create_kwargs = {"user": "root"}
 #                            GPU Stuff
 #===========================================================================
 c.DockerSpawner.extra_host_config = {"runtime": "nvidia"}
-c.Spawner.args = ["--gpus all"]
+c.Spawner.args = os.environ.get('CONTAINER_SPAWN_ARGS').split(",")
 
 #===========================================================================
 #                            Other Configuration
