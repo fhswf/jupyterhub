@@ -30,8 +30,14 @@ c.JupyterHub.authenticator_class = MultiAuthenticator
 #===========================================================================
 
 c.JupyterHub.spawner_class = 'dockerspawner.DockerSpawner'
-c.DockerSpawner.image = os.environ['DOCKER_JUPYTER_CONTAINER']
 c.DockerSpawner.network_name = os.environ['DOCKER_NETWORK_NAME']
+#c.DockerSpawner.image = os.environ['DOCKER_JUPYTER_CONTAINER']
+c.DockerSpawner.allowed_images = os.environ['DOCKER_JUPYTER_CONTAINERS'].split(",")
+#[
+#    "jupyterlab_img",
+#    "ghcr.io/fhswf/jupyterhub/jupyterlab-scipy-gpu:main",
+#    "ghcr.io/fhswf/jupyterhub/jupyterlab-scipy-cpu:main"
+#]
 
 # -> https://github.com/jupyterhub/dockerspawner/blob/master/examples/oauth/jupyterhub_config.py
 c.JupyterHub.hub_ip = os.environ['HUB_IP']

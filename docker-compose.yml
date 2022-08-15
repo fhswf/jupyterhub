@@ -11,7 +11,9 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
 #      - /var/data/jupyterhub:/srv/jupyterhub
     environment:
-      - DOCKER_JUPYTER_CONTAINER=jupyterlab_img
+      #- DOCKER_JUPYTER_CONTAINER=jupyterlab_img
+      - DOCKER_JUPYTER_CONTAINERS = jupyterlab_img, ghcr.io/fhswf/jupyterhub/jupyterlab-scipy-gpu:main, ghcr.io/fhswf/jupyterhub/jupyterlab-scipy-cpu:main
+
       - DOCKER_NETWORK_NAME=traefik
       - HUB_IP=jupyterhub
       - HOST
