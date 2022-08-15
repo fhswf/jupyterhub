@@ -33,6 +33,8 @@ c.JupyterHub.spawner_class = 'dockerspawner.DockerSpawner'
 c.DockerSpawner.network_name = os.environ['DOCKER_NETWORK_NAME']
 #c.DockerSpawner.image = os.environ['DOCKER_JUPYTER_CONTAINER']
 c.DockerSpawner.allowed_images = os.environ['DOCKER_JUPYTER_CONTAINERS'].split(",")
+c.Spawner.http_timeout=60
+c.Spawner.start_timeout=300
 #[
 #    "jupyterlab_img",
 #    "ghcr.io/fhswf/jupyterhub/jupyterlab-scipy-gpu:main",
