@@ -33,6 +33,8 @@ c.JupyterHub.spawner_class = 'dockerspawner.DockerSpawner'
 c.DockerSpawner.network_name = os.environ['DOCKER_NETWORK_NAME']
 #c.DockerSpawner.image = os.environ['DOCKER_JUPYTER_CONTAINER']
 c.DockerSpawner.allowed_images = os.environ['DOCKER_JUPYTER_CONTAINERS'].split(",")
+c.Spawner.remove = True
+
 c.Spawner.http_timeout=60
 c.Spawner.start_timeout=300
 #[
@@ -60,8 +62,9 @@ c.DockerSpawner.environment = {
     }
 c.DockerSpawner.extra_create_kwargs = {"user": "root"}
 
-for touple in [touple.split(":") for touple in os.environ.get('CONTAINER_SPAWN_ENVS').split(",")]:
-    c.DockerSpawner.environment.update({touple[0]:touple[1]})
+if os.environ.get('CONTAINER_SPAWN_ENVS'):
+    for touple in [touple.split(":") for touple in os.environ.get('CONTAINER_SPAWN_ENVS').split(",")]:
+        c.DockerSpawner.environment.update({touple[0]:touple[1]})
 # maybe append variable env args here via compose
 #c.Spawner.args = os.environ.get('CONTAINER_SPAWN_ARGS').split(",")
 
@@ -73,7 +76,6 @@ c.DockerSpawner.extra_host_config = {"runtime": "nvidia", "e My_test_ev":"hellow
 #===========================================================================
 #                            Other Configuration
 #===========================================================================
-
 c.Spawner.cpu_limit = 1
 c.Spawner.mem_limit = '10G'
 
