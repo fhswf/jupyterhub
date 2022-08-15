@@ -6,8 +6,6 @@ env:
 
 on:
   workflow_call:
-    paths:
-      - '${{ inputs.image }}/**'
     inputs:
       image:
         description: Image name
