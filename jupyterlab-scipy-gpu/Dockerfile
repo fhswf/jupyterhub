@@ -1,5 +1,8 @@
 FROM ghcr.io/fhswf/jupyterhub-docker-stacks/scipy-notebook:latest
 
+# some alternative route is here: https://github.com/iot-salzburg/gpu-jupyter
+# not sure if this version is better then what we have now
+
 LABEL maintainer="FH SWF>"
 
 USER root
