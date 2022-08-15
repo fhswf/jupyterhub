@@ -76,15 +76,9 @@ services:
     environment:
       KC_DB: postgres
       KC_DB_URL: 'jdbc:postgresql://postgres/keycloak'
-      #DB_ADDR: postgres
-      #KC_DB_DATABASE: ${POSTGRESQL_DB}
       KC_DB_USERNAME: ${POSTGRESQL_USER}
       KC_DB_PASSWORD: ${POSTGRESQL_PASS}
       KC_HTTP_ENABLED: "true"
-      # PROXY_ADDRESS_FORWARDING: "true"
-      # KEYCLOAK_ADMIN: admin
-      # KEYCLOAK_ADMIN_PASSWORD: admin
-      # HTTP_ADDRESS_FORWARDING: 'true'
 
       KC_LOG_LEVEL: INFO
       KC_HTTP_RELATIVE_PATH: /keycloak
@@ -105,22 +99,6 @@ services:
     restart: unless-stopped
     networks:
       - traefik
-    #labels:
-      #- traefik.enable=true
-      #- traefik.http.routers.${COMPOSE_PROJECT_NAME}-core.rule=PathPrefix(`/keycloak`)
-
-  #reverse-proxy:
-    #image: traefik
-    #container_name: reverse-proxy
-    #ports:
-      #- "80:80"
-      #- "443:443"
-      #- "8080:8080"
-    #volumes:
-      #- ./reverse-proxy/traefik.toml:/etc/traefik/traefik.toml
-      #- /etc/certs:/etc/certs
-      #- /var/run/docker.sock:/var/run/docker.sock
-    #restart: on-failure
 
 volumes:
   keycloak_database:
