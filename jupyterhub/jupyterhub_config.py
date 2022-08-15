@@ -48,8 +48,10 @@ c.DockerSpawner.environment = {
     'CHOWN_HOME': 'yes'}
 c.DockerSpawner.extra_create_kwargs = {"user": "root"}
 
-c.DockerSpawner.extra_create_kwargs = {"user": "root"}
-
+#===========================================================================
+#                            GPU Stuff
+#===========================================================================
+c.DockerSpawner.extra_host_config = {"runtime": "nvidia"}
 
 #===========================================================================
 #                            Other Configuration
