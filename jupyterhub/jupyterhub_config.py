@@ -62,6 +62,15 @@ c.DockerSpawner.environment = {
     }
 c.DockerSpawner.extra_create_kwargs = {"user": "root"}
 
+c.Spawner.environment = {
+    'Mytestev': "foobar",
+    'NVIDIA_VISIBLE_DEVICES':1
+}
+
+c.Spawner.args = ["--gpus all", "-e MyotherTest hellp"]
+c.DockerSpawner.args = ["--gpus all", "-e MyotherTest helllllll"]
+
+
 if os.environ.get('CONTAINER_SPAWN_ENVS'):
     for touple in [touple.split(":") for touple in os.environ.get('CONTAINER_SPAWN_ENVS').split(",")]:
         c.DockerSpawner.environment.update({touple[0]:touple[1]})
