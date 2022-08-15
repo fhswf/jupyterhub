@@ -2,7 +2,7 @@ from jupyterhub.auth import DummyAuthenticator
 from modules.MultiAuthenticator import MultiAuthenticator
 import os
 import sys
-
+import docker
 
 #===========================================================================
 #                            General Configuration
@@ -81,7 +81,15 @@ if os.environ.get('CONTAINER_SPAWN_ENVS'):
 #===========================================================================
 #                            GPU Stuff
 #===========================================================================
-c.DockerSpawner.extra_host_config = {"runtime": "nvidia"}
+c.DockerSpawner.extra_host_config = {
+    "runtime": "nvidia",
+    "device_requests": [
+        docker.types.DeviceRequest(
+            count=1,
+            capabilities=[["gpu"]],
+        ),
+    ],
+}
 
 #===========================================================================
 #                            Other Configuration
