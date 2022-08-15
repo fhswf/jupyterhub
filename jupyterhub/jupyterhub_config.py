@@ -53,14 +53,20 @@ c.DockerSpawner.notebook_dir = notebook_dir
 c.DockerSpawner.volumes = {'jupyterhub-user-{username}': notebook_dir}
 c.DockerSpawner.environment = {
     'NB_USER': '${JUPYTERHUB_USER}', 
-    'CHOWN_HOME': 'yes'}
+    'CHOWN_HOME': 'yes',
+    'NVIDIA_VISIBLE_DEVICES':1
+    }
 c.DockerSpawner.extra_create_kwargs = {"user": "root"}
+
+for touple in [touple.split(":") for touple in os.environ.get('CONTAINER_SPAWN_ENVS').split(",")]:
+    c.DockerSpawner.environment.update({touple[0]:touple[1]})
+# maybe append variable env args here via compose
+#c.Spawner.args = os.environ.get('CONTAINER_SPAWN_ARGS').split(",")
 
 #===========================================================================
 #                            GPU Stuff
 #===========================================================================
 c.DockerSpawner.extra_host_config = {"runtime": "nvidia"}
-c.Spawner.args = os.environ.get('CONTAINER_SPAWN_ARGS').split(",")
 
 #===========================================================================
 #                            Other Configuration
