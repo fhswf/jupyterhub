@@ -21,7 +21,14 @@ USER $NB_UID
 
 RUN pip install -U jupyterhub
 
+RUN pip install \
+    tensorflow \
+    torch \
+    torchvision \
+    torchaudio \
+    --extra-index-url https://download.pytorch.org/whl/cpu
+
 ENV CPATH=$CONDA_DIR/include
 
 RUN pip install \
-    scilab-kernel
+    scilab-kernel 

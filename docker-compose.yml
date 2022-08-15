@@ -2,7 +2,7 @@ version: '3'
 
 services:
   jupyterhub:
-    build: jupyterhub
+    #build: jupyterhub
     image: ghcr.io/fhswf/jupyterhub_hub:main
     container_name: jupyterhub
     expose:
@@ -39,10 +39,17 @@ services:
       - traefik.http.routers.${COMPOSE_PROJECT_NAME}-core.rule=PathPrefix(`/newhub`)
     restart: on-failure
 
-  jupyterlab:
-    build:
-      context: jupyterlab
-    image: ghcr.io/fhswf/jupyterhub_lab:main
+  #jupyterlab:
+  #  #build:
+  #  #  context: jupyterlab
+  #  image: ghcr.io/fhswf/jupyterhub_lab:main
+  #  deploy:
+  #    resources:
+  #      reservations:
+  #        devices:
+  #          - driver: nvidia
+  #            count: 1
+  #            capabilities: [gpu]
 
   postgres:
     image: postgres:latest
