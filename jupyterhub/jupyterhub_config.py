@@ -71,7 +71,7 @@ if os.environ.get('CONTAINER_SPAWN_ENVS'):
 #===========================================================================
 #                            GPU Stuff
 #===========================================================================
-c.DockerSpawner.extra_host_config = {"runtime": "nvidia", "gpus": "all"}
+c.DockerSpawner.extra_host_config = {"runtime": "nvidia"}
 
 #===========================================================================
 #                            Other Configuration
