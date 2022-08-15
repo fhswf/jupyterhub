@@ -68,7 +68,7 @@ for touple in [touple.split(":") for touple in os.environ.get('CONTAINER_SPAWN_E
 #===========================================================================
 #                            GPU Stuff
 #===========================================================================
-c.DockerSpawner.extra_host_config = {"runtime": "nvidia"}
+c.DockerSpawner.extra_host_config = {"runtime": "nvidia", "e My_test_ev":"hellowrold", "e NVIDIA_VISIBLE_DEVICES":1}
 
 #===========================================================================
 #                            Other Configuration
