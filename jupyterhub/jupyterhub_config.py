@@ -52,9 +52,11 @@ notebook_dir = os.environ.get('DOCKER_NOTEBOOK_DIR') or '/home/jovyan/work'
 c.DockerSpawner.notebook_dir = notebook_dir
 c.DockerSpawner.volumes = {'jupyterhub-user-{username}': notebook_dir}
 c.DockerSpawner.environment = {
+    'My_test_ev': "hello wrold",
     'NB_USER': '${JUPYTERHUB_USER}', 
     'CHOWN_HOME': 'yes',
-    'NVIDIA_VISIBLE_DEVICES':1
+    'NVIDIA_VISIBLE_DEVICES':1,
+    'my_test_envvar2': '=42 --gpus all'
     }
 c.DockerSpawner.extra_create_kwargs = {"user": "root"}
 
