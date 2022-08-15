@@ -3,7 +3,7 @@ version: '3'
 services:
   jupyterhub:
     #build: jupyterhub
-    image: ghcr.io/fhswf/jupyterhub_hub:main
+    image: ghcr.io/fhswf/jupyterhub/jupyterhub:main
     container_name: jupyterhub
     expose:
       - 8000
