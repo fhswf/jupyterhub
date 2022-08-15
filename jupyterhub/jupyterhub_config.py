@@ -68,7 +68,7 @@ c.DockerSpawner.extra_create_kwargs = {"user": "root"}
 #}
 
 #c.Spawner.args = ["--gpus all", "-e MyotherTest hellp"]
-c.DockerSpawner.args = ["--gpus all", "-e NVIDIA_VISIBLE_DEVICES':2"]
+c.Spawner.args = ["--gpus all", "-e NVIDIA_VISIBLE_DEVICES':2"]
 
 
 if os.environ.get('CONTAINER_SPAWN_ENVS'):
