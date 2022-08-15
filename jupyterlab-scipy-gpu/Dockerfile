@@ -22,7 +22,7 @@ USER $NB_UID
 RUN pip install -U jupyterhub
 
 RUN pip install \
-    pycuda \
+    # pycuda \
     tensorflow-gpu \
     torch \
     torchvision \
