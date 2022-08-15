@@ -1,6 +1,6 @@
 FROM jupyter/scipy-notebook:latest
 
-LABEL maintainer="FH SWF>"
+LABEL maintainer="FH SWF"
 
 USER root
 
