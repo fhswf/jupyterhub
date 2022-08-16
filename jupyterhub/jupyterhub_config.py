@@ -33,7 +33,11 @@ c.JupyterHub.spawner_class = 'dockerspawner.DockerSpawner'
 c.DockerSpawner.network_name = os.environ['DOCKER_NETWORK_NAME']
 #c.DockerSpawner.image = os.environ['DOCKER_JUPYTER_CONTAINER']
 c.DockerSpawner.allowed_images = os.environ['DOCKER_JUPYTER_CONTAINERS'].split(",")
-c.Spawner.remove = True
+
+if os.environ['DOCKER_PERSIST_NOTEBOOK'] is not None:
+    c.Spawner.remove = not os.environ['DOCKER_PERSIST_NOTEBOOK']
+else:
+    c.Spawner.remove = True
 
 c.Spawner.http_timeout=120
 c.Spawner.start_timeout=300
@@ -53,30 +57,15 @@ c.JupyterHub.shutdown_on_logout = True
 notebook_dir = os.environ.get('DOCKER_NOTEBOOK_DIR') or '/home/jovyan/work'
 c.DockerSpawner.notebook_dir = notebook_dir
 c.DockerSpawner.volumes = {'jupyterhub-user-{username}': notebook_dir}
+# not sure if theese vaules are acutally inserted into spawned container:
 c.DockerSpawner.environment = {
     'My_test_ev': "hellowrold",
     'NB_USER': '${JUPYTERHUB_USER}', 
     'CHOWN_HOME': 'yes',
     'NVIDIA_VISIBLE_DEVICES':1,
-    #'my_test_envvar2': '=42 --gpus all'
     }
 c.DockerSpawner.extra_create_kwargs = {"user": "root"}
 
-# somehow we need to pass env args that get expected...
-#c.Spawner.environment = {
-#    'Mytestev': "foobar",
-#    'NVIDIA_VISIBLE_DEVICES':1
-#}
-
-#c.Spawner.args = ["--gpus all", "-e MyotherTest hellp"]
-#c.Spawner.args = ["--gpus all", "-e NVIDIA_VISIBLE_DEVICES':2"]
-
-
-if os.environ.get('CONTAINER_SPAWN_ENVS'):
-    for touple in [touple.split(":") for touple in os.environ.get('CONTAINER_SPAWN_ENVS').split(",")]:
-        c.DockerSpawner.environment.update({touple[0]:touple[1]})
-# maybe append variable env args here via compose
-#c.Spawner.args = os.environ.get('CONTAINER_SPAWN_ARGS').split(",")
 
 #===========================================================================
 #                            GPU Stuff

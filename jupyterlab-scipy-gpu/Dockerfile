@@ -24,9 +24,13 @@ USER $NB_UID
 
 RUN pip install -U jupyterhub
 
+RUN conda install -y -c conda-forge cudatoolkit=11.2 cudnn=8.1.0
+
+ENV LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:${CONDA_DIR}/lib/
+
 RUN pip install \
     # pycuda \
-    tensorflow-gpu \
+    tensorflow \
     torch \
     torchvision \
     torchaudio 
