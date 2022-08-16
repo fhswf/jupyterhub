@@ -52,12 +52,10 @@ c.JupyterHub.shutdown_on_logout = True
 notebook_dir = os.environ.get('DOCKER_NOTEBOOK_DIR') or '/home/jovyan/work'
 c.DockerSpawner.notebook_dir = notebook_dir
 c.DockerSpawner.volumes = {'jupyterhub-user-{username}': notebook_dir}
-# not sure if theese vaules are acutally inserted into spawned container:
+c.Spawner.env_keep = ['LD_LIBRARY_PATH'] # set in DOCKERFILE of spawned container
 c.DockerSpawner.environment = {
-    'My_test_ev': "hellowrold",
     'NB_USER': '${JUPYTERHUB_USER}', 
     'CHOWN_HOME': 'yes',
-    'NVIDIA_VISIBLE_DEVICES':1,
     }
 c.DockerSpawner.extra_create_kwargs = {"user": "root"}
 
