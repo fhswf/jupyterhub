@@ -26,7 +26,12 @@ RUN pip install -U jupyterhub
 
 RUN conda install -y -c conda-forge cudatoolkit=11.2 cudnn=8.1.0
 
+USER root
+
 ENV LD_LIBRARY_PATH=${CONDA_DIR}/lib/:${LD_LIBRARY_PATH}
+RUN echo LD_LIBRARY_PATH="${LD_LIBRARY_PATH}" >> /etc/environment 
+
+USER $NB_UID
 
 RUN pip install \
     # pycuda \
