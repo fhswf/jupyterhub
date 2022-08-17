@@ -13,7 +13,7 @@ c.JupyterHub.template_paths = ['templates']
 c.Application.log_level = "DEBUG"
 
 c.Spawner.default_url = '/lab'
-c.JupyterHub.base_url = '/newhub/'
+c.JupyterHub.base_url = os.environ['HUB_BASE_URL_PREFIX'] + "/"
 
 c.Authenticator.admin_users = {"admin"}
 
@@ -63,6 +63,7 @@ c.DockerSpawner.extra_create_kwargs = {"user": "root"}
 #===========================================================================
 #                            GPU Stuff
 #===========================================================================
+# TODO make this dependend on user/moodle/group
 c.DockerSpawner.extra_host_config = {
     "runtime": "nvidia",
     "device_requests": [
