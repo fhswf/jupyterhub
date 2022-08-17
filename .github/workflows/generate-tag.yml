@@ -15,7 +15,7 @@ jobs:
       - uses: actions/checkout@v3
         with:
           fetch-depth: '0'
-      - uses: ChloePlanet/github-tag-action@master
+      - uses: PrateekKhatri/github-tag-action-1@master
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           WITH_V: true
