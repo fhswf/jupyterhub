@@ -32,7 +32,7 @@ jobs:
 
   build-and-push-hub:
     needs: changes
-    if: ${{ needs.changes.outputs.hub == 'true' }
+    if: ${{ needs.changes.outputs.hub == 'true' }}
     uses: ./.github/workflows/reusable-docker-build-push.yml
     with:
       image: jupyterhub
@@ -40,7 +40,7 @@ jobs:
 
   build-and-push-lab-cpu:
     needs: changes
-    if: ${{ needs.changes.outputs.lab-cpu == 'true' }
+    if: ${{ needs.changes.outputs.lab-cpu == 'true' }}
     uses: ./.github/workflows/reusable-docker-build-push.yml
     with:
       image: jupyterlab-scipy-cpu
@@ -48,7 +48,7 @@ jobs:
 
   build-and-push-lab-gpu:
     needs: changes
-    if: ${{ needs.changes.outputs.lab-gpu == 'true' }
+    if: ${{ needs.changes.outputs.lab-gpu == 'true' }}
     uses: ./.github/workflows/reusable-docker-build-push.yml
     with:
       image: jupyterlab-scipy-gpu
