@@ -1,25 +1,23 @@
-name: Bump version
+name: Semantic Release
 
 on:
   push:
     branches:
       - main
 
-  workflow_dispatch:
-
 jobs:
-  build:
+  release:
     runs-on: ubuntu-latest
+    concurrency: release
+
     steps:
     - uses: actions/checkout@v2
       with:
-        fetch-depth: '0'
-    - name: Bump version and push tag
-      uses: anothrNick/github-tag-action@master
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        WITH_V: true
-        DEFAULT_BUMP: none
-        RELEASE_BRANCHES: main
-        VERBOSE: true
-        
+        fetch-depth: 0
+
+    - name: Python Semantic Release
+      uses: relekang/python-semantic-release@master
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        repository_username: __token__
+        repository_password: ${{ secrets.PYPI_TOKEN }}
