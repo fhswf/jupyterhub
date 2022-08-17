@@ -10,6 +10,7 @@
 [![GitHub](https://img.shields.io/badge/issue_tracking-github-blue?logo=github)](https://github.com/fhswf/jupyterhub/issues)
 [![GitHub Tags](https://img.shields.io/github/v/tag/fhswf/jupyterhub?style=plastic)](https://github.com/fhswf/jupyterhub/tags)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Documentation Status](https://readthedocs.org/projects/jupyterhub-test-dokumentation/badge/?version=latest)](https://jupyterhub-test-dokumentation.readthedocs.io/en/latest/?badge=latest)
 
 ## Technical Overview
 ### Authenticators
