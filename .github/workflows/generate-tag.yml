@@ -1,4 +1,4 @@
-name: Generate tag
+name: Bump version
 
 on:
   push:
@@ -9,13 +9,11 @@ on:
 
 jobs:
   build:
-    name: Generate tag
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-        with:
-          fetch-depth: '0'
-      - uses: PrateekKhatri/github-tag-action-1@master
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          WITH_V: true
+    - uses: actions/checkout@main
+    - name: Bump version and push tag
+      uses: anothrNick/github-tag-action@master
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        REPO_OWNER: anothrNick
