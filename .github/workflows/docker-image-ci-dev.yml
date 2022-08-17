@@ -11,9 +11,9 @@ jobs:
     runs-on: ubuntu-latest
     # Set job outputs to values from filter step
     outputs:
-      backend: ${{ steps.filter.outputs.hub }}
-      frontend: ${{ steps.filter.outputs.lab-gpu }}   
-      frontend: ${{ steps.filter.outputs.lab-cpu }}
+      hub: ${{ steps.filter.outputs.hub }}
+      lab-gpu: ${{ steps.filter.outputs.lab-gpu }}   
+      lab-cpu: ${{ steps.filter.outputs.lab-cpu }}
 
     steps:
     - name: Checkout repository
