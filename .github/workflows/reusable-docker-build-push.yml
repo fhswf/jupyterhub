@@ -11,7 +11,7 @@ on:
         description: Image name
         required: true
         type: string
-
+        
 jobs:
   build-push:
     runs-on: ubuntu-latest
