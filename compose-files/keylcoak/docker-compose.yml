@@ -1,0 +1,63 @@
+version: '3'
+
+services:
+  postgres:
+    image: postgres:latest
+    restart: unless-stopped
+    volumes:
+      - keycloak_database:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: ${POSTGRESQL_DB}
+      POSTGRES_USER: ${POSTGRESQL_USER}
+      POSTGRES_PASSWORD: ${POSTGRESQL_PASS}
+    networks:
+      - local-keycloak
+    logging:
+      driver: none
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:latest
+    # only required if database is not persisted
+    #volumes:
+    #  - /opt/keycloak/data:/opt/keycloak/data
+    depends_on:
+      - postgres
+    environment:
+      KC_DB: postgres
+      KC_DB_URL: 'jdbc:postgresql://postgres/keycloak'
+      KC_DB_USERNAME: ${POSTGRESQL_USER}
+      KC_DB_PASSWORD: ${POSTGRESQL_PASS}
+      KC_HTTP_ENABLED: "true"
+
+      KC_LOG_LEVEL: DEBUG
+      KC_HTTP_RELATIVE_PATH: /keycloak
+      PROXY_ADDRESS_FORWARDING: "true"
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+      KC_HOSTNAME: jupiter.fh-swf.de
+      KC_HOSTNAME_STRICT_HTTPS: 'true'
+      KC_PROXY: 'edge'
+      
+    command:
+      # we might have to remove auto-build at some point 
+      - "start"
+      - "--auto-build"
+
+    ports:
+      - "8088:8080"
+    restart: unless-stopped
+    
+    networks:
+      - traefik
+      - local-keycloak
+
+volumes:
+  keycloak_database:
+    driver: local
+
+networks:
+  local-keycloak:
+    name: local-keycloak
+  traefik:
+    name: traefik
+    external: true
