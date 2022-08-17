@@ -4,15 +4,7 @@ on:
   schedule:
     - cron: '18 15 * * *'
   push:
-    branches: [ "main" , "release"]
-    #paths:
-    #  - "path/to/relevant/dirs/where/changes/cause/rebuilds"
-    
-    # TODO Automate version numbers
-    # Publish semver tags as releases.
-    # tags: [ 'v*.*.*' ]
-  pull_request:
-    branches: [ "main" ]
+    branches: [ "develop" ]
 
 jobs:
   changes:
@@ -26,17 +18,20 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v3
+      with:
+        ref: develop
 
     - uses: dorny/paths-filter@v2
       id: filter
       with:
+        base: develop
         filters: |
           hub:
             - 'jupyterhub/**'
           lab-gpu:
             - 'jupyterlab-scipy-gpu/**'
           lab-cpu:
-            - 'jupyterlab-scipy-cpu/**
+            - 'jupyterlab-scipy-cpu/**'
 
   build-and-push-hub:
     needs: changes
@@ -44,6 +39,7 @@ jobs:
     uses: ./.github/workflows/reusable-docker-build-push.yml
     with:
       image: jupyterhub
+      #tag: dev
 
   build-and-push-lab-cpu:
     needs: changes
@@ -51,6 +47,7 @@ jobs:
     uses: ./.github/workflows/reusable-docker-build-push.yml
     with:
       image: jupyterlab-scipy-cpu
+      #tag: dev
 
   build-and-push-lab-gpu:
     needs: changes
@@ -58,3 +55,4 @@ jobs:
     uses: ./.github/workflows/reusable-docker-build-push.yml
     with:
       image: jupyterlab-scipy-gpu
+      #tag: dev
