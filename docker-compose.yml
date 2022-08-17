@@ -94,7 +94,7 @@ services:
     command:
       # we might have to remove auto-build at some point 
       - "start"
-      - "--auto-build"
+      - "--optimized"
 
     ports:
       - "8088:8080"
