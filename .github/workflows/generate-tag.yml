@@ -14,11 +14,11 @@ jobs:
     - uses: actions/checkout@v3
       with:
         fetch-depth: 0
-    - name: Github Tag Bump v2
-      uses: zozoxo1/github-tag-action@v1.0.0
+    - name: Github Tag Bump local
+      uses: fhswf/JupyterHub-Autotagger-Action@v1.0.2
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         WITH_V: true
-        DEFAULT_BUMP: none
+        DEFAULT_BUMP: patch
         RELEASE_BRANCHES: main
         VERBOSE: true
