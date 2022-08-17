@@ -184,8 +184,12 @@ class MultiAuthenticator(Authenticator):
 
         auth_state = await user.get_auth_state()
         if not auth_state:
-            # auth_state not enabled
+            print("pre_spawn_start: auth_state not enabled")
             return
+
+        group_names = [group.name for group in spawner.user.groups]
+
+        print(group_names)
 
         spawner.environment = {
             'NB_USER': spawner.user.name,
