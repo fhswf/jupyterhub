@@ -15,7 +15,7 @@ jobs:
       with:
         fetch-depth: 0
     - name: Github Tag Bump local
-      uses: fhswf/JupyterHub-Autotagger-Action@latest
+      uses: fhswf/JupyterHub-Autotagger-Action@v1.0.3
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         WITH_V: true
