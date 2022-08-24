@@ -29,7 +29,7 @@ services:
       KC_DB_PASSWORD: ${POSTGRESQL_PASS}
       KC_HTTP_ENABLED: "true"
 
-      KC_LOG_LEVEL: DEBUG
+      KC_LOG_LEVEL: ${KEYCLOAK_LOGLEVEL}
       KC_HTTP_RELATIVE_PATH: /keycloak
       PROXY_ADDRESS_FORWARDING: "true"
       KEYCLOAK_ADMIN: admin
