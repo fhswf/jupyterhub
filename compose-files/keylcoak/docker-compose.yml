@@ -41,7 +41,7 @@ services:
     command:
       # we might have to remove auto-build at some point 
       - "start"
-      - "--auto-build"
+      #- "--auto-build"
 
     ports:
       - "8088:8080"
@@ -57,7 +57,7 @@ volumes:
 
 networks:
   local-keycloak:
-    name: local-keycloak
+    name: ${COMPOSE_PROJECT_NAME}-local-keycloak
   traefik:
     name: traefik
     external: true
