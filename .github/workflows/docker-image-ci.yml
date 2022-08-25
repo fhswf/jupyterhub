@@ -4,7 +4,7 @@ on:
   schedule:
     - cron: '18 15 * * *'
   push:
-    branches: [ "main" , "release"]
+    branches: [ "main" ]
     #paths:
     #  - "path/to/relevant/dirs/where/changes/cause/rebuilds"
     
@@ -30,6 +30,7 @@ jobs:
     - uses: dorny/paths-filter@v2
       id: filter
       with:
+        base: main
         filters: |
           hub:
             - 'jupyterhub/**'
