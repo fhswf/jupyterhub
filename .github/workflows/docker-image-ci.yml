@@ -4,13 +4,9 @@ on:
   schedule:
     - cron: '18 15 * * *'
   push:
-    branches: [ "main" , "release"]
-    #paths:
-    #  - "path/to/relevant/dirs/where/changes/cause/rebuilds"
+    branches: [ "main" ]
+    tags: [ 'v*.*.*' ]
     
-    # TODO Automate version numbers
-    # Publish semver tags as releases.
-    # tags: [ 'v*.*.*' ]
   pull_request:
     branches: [ "main" ]
 
@@ -30,6 +26,7 @@ jobs:
     - uses: dorny/paths-filter@v2
       id: filter
       with:
+        base: main
         filters: |
           hub:
             - 'jupyterhub/**'
