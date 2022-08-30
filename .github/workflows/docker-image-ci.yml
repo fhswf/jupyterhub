@@ -5,12 +5,8 @@ on:
     - cron: '18 15 * * *'
   push:
     branches: [ "main" ]
-    #paths:
-    #  - "path/to/relevant/dirs/where/changes/cause/rebuilds"
+    tags: [ 'v*.*.*' ]
     
-    # TODO Automate version numbers
-    # Publish semver tags as releases.
-    # tags: [ 'v*.*.*' ]
   pull_request:
     branches: [ "main" ]
 
