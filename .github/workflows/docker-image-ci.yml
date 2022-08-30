@@ -6,7 +6,7 @@ on:
   push:
     branches: [ "main" ]
     tags: [ 'v*.*.*' ]
-    
+
   pull_request:
     branches: [ "main" ]
 
@@ -37,21 +37,21 @@ jobs:
 
   build-and-push-hub:
     needs: changes
-    if: ${{ needs.changes.outputs.hub == 'true' }}
+    if: ${{ needs.changes.outputs.hub == 'true' | github.event_name == 'schedule' }}
     uses: ./.github/workflows/reusable-docker-build-push.yml
     with:
       image: jupyterhub
 
   build-and-push-lab-cpu:
     needs: changes
-    if: ${{ needs.changes.outputs.lab-cpu == 'true' }}
+    if: ${{ needs.changes.outputs.lab-cpu == 'true' | github.event_name == 'schedule' }}
     uses: ./.github/workflows/reusable-docker-build-push.yml
     with:
       image: jupyterlab-scipy-cpu
 
   build-and-push-lab-gpu:
     needs: changes
-    if: ${{ needs.changes.outputs.lab-gpu == 'true' }}
+    if: ${{ needs.changes.outputs.lab-gpu == 'true' | github.event_name == 'schedule' }}
     uses: ./.github/workflows/reusable-docker-build-push.yml
     with:
       image: jupyterlab-scipy-gpu
