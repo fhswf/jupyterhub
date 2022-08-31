@@ -29,10 +29,23 @@ c.JupyterHub.authenticator_class = MultiAuthenticator
 #                            Docker Spawner Configuration
 #===========================================================================
 
-c.JupyterHub.spawner_class = 'dockerspawner.DockerSpawner'
-c.DockerSpawner.network_name = os.environ['DOCKER_NETWORK_NAME']
-#c.DockerSpawner.image = os.environ['DOCKER_JUPYTER_CONTAINER']
-c.DockerSpawner.allowed_images = os.environ['DOCKER_JUPYTER_CONTAINERS'].split(",")
+c.JupyterHub.spawner_class = os.environ['JUPYTERHUB_SPAWNERCLASS']
+
+if os.environ['JUPYTERHUB_SPAWNERCLASS'] == "dockerspawner.SwarmSpawner":
+    c.SwarmSpawner.allowed_images = os.environ['DOCKER_JUPYTER_CONTAINERS'].split(",")
+    c.SwarmSpawner.debug = True
+    network_name = os.environ['DOCKER_NETWORK_NAME']
+    c.SwarmSpawner.network_name = network_name
+    c.SwarmSpawner.extra_host_config = {'network_mode': network_name}
+
+
+elif  os.environ['JUPYTERHUB_SPAWNERCLASS'] == 'dockerspawner.DockerSpawner':
+    c.DockerSpawner.network_name = os.environ['DOCKER_NETWORK_NAME']
+    #c.DockerSpawner.image = os.environ['DOCKER_JUPYTER_CONTAINER']
+    c.DockerSpawner.allowed_images = os.environ['DOCKER_JUPYTER_CONTAINERS'].split(",") 
+else:
+    raise Exception("illegal spawner class found in config {}".format(os.environ['JUPYTERHUB_SPAWNERCLASS']))
+
 
 if "DOCKER_PERSIST_NOTEBOOK" in os.environ.keys():
     c.Spawner.remove = not os.environ['DOCKER_PERSIST_NOTEBOOK']

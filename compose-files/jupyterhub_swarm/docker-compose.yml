@@ -13,8 +13,8 @@ services:
       #- DOCKER_JUPYTER_CONTAINER=jupyterlab_img
       - DOCKER_JUPYTER_CONTAINERS=jupyterlab_testimg,ghcr.io/fhswf/jupyterhub/jupyterlab-scipy-gpu:main,ghcr.io/fhswf/jupyterhub/jupyterlab-scipy-cpu:main
       #- DOCKER_SPAWN_ENVS=NVIDIA_VISIBLE_DEVICES:1
-      - JUPYTERHUB_SPAWNERCLASS=dockerspawner.DockerSpawner
-      - DOCKER_NETWORK_NAME=traefik
+      - JUPYTERHUB_SPAWNERCLASS=dockerspawner.SwarmSpawner
+      - DOCKER_NETWORK_NAME=jupyterhub_network
       - HUB_IP=jupyterhub # same as serivce name
       - HOST
       - JUPYTERHUB_CRYPT_KEY=${JUPYTERHUB_CRYPT_KEY}
@@ -36,13 +36,22 @@ services:
       - OAUTH_CALLBACK_URL=${OAUTH_CALLBACK_URL}
       - OAUTH2_USERDATA_URL=${OAUTH2_INTERNAL_USERDATA_URL}
     networks:
-      - traefik
-    labels:
-      - traefik.enable=true
-      - traefik.http.routers.${COMPOSE_PROJECT_NAME}-core.rule=PathPrefix(`${HUB_BASE_URL_PREFIX}`)
+      #- traefik
+      - jupyterhub_network
+    #labels:
+      #- traefik.enable=true
+      #- traefik.http.routers.${COMPOSE_PROJECT_NAME}-core.rule=PathPrefix(`${HUB_BASE_URL_PREFIX}`)
     restart: on-failure
-
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.role == manager
 networks:
-  traefik:
-    name: traefik
+  #traefik:
+    #name: traefik
+  #  external: true
+  jupyterhub_network:
+    driver: overlay
     external: true
+    #attachable: true
