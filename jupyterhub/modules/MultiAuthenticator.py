@@ -189,8 +189,8 @@ class MultiAuthenticator(Authenticator):
 
         group_names = [group.name for group in spawner.user.groups]
 
-        print("========================== GRUPPEN ===========================")
-        print(group_names)
+        print("========================== USERINFO ===========================")
+        print(spawner.user.name)
 
         spawner.environment = {
             'NB_USER': spawner.user.name,

@@ -1,10 +1,12 @@
-from dockerspawner import DockerSpawner
+from dockerspawner import SwarmSpawner
 import os
 
-class CustomSpawner(DockerSpawner):
+class CustomSpawner(SwarmSpawner):
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        print("==============INIT SPAWNER=================")
+        """
         self.default_url = '/lab'
         notebook_dir = os.environ.get('DOCKER_NOTEBOOK_DIR') or '/home/jovyan/work'
 
@@ -38,3 +40,12 @@ class CustomSpawner(DockerSpawner):
             c.Spawner.remove = not os.environ['DOCKER_PERSIST_NOTEBOOK']
         else:
             c.Spawner.remove = True
+        """
+    def get_env(self, *args, **kwargs):
+        print("==============GET ENV=================")
+
+        ret = super().get_env(*args, **kwargs)
+        ret.update({"NVIDIA_VISIBLE_DEVICES": "1"})
+        print(ret)
+        return ret
+

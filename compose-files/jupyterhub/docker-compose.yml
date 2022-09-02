@@ -4,8 +4,9 @@ services:
   jupyterhub:
     image: ${JUPYTERHUB_IMAGE}
     #container_name: jupyterhub
-    expose:
-      - 8000
+    ports:
+      - 8985:8000
+      - 8986:8001
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
 #      - /var/data/jupyterhub:/srv/jupyterhub
@@ -16,7 +17,7 @@ services:
       - JUPYTERHUB_SPAWNERCLASS=dockerspawner.DockerSpawner
       - DOCKER_NETWORK_NAME=traefik
       - HUB_IP=jupyterhub # same as serivce name
-      - HOST
+      - HOST=${HOST}
       - JUPYTERHUB_CRYPT_KEY=${JUPYTERHUB_CRYPT_KEY}
       - HUB_BASE_URL_PREFIX=${HUB_BASE_URL_PREFIX}
       
@@ -35,14 +36,14 @@ services:
       - OAUTH_CLIENT_SECRET=${OAUTH_CLIENT_SECRET}
       - OAUTH_CALLBACK_URL=${OAUTH_CALLBACK_URL}
       - OAUTH2_USERDATA_URL=${OAUTH2_INTERNAL_USERDATA_URL}
-    networks:
-      - traefik
-    labels:
-      - traefik.enable=true
-      - traefik.http.routers.${COMPOSE_PROJECT_NAME}-core.rule=PathPrefix(`${HUB_BASE_URL_PREFIX}`)
+    #networks:
+    #  - traefik
+    #labels:
+    #  - traefik.enable=true
+    #  - traefik.http.routers.${COMPOSE_PROJECT_NAME}-core.rule=PathPrefix(`${HUB_BASE_URL_PREFIX}`)
     restart: on-failure
 
-networks:
-  traefik:
-    name: traefik
-    external: true
+#networks:
+#  traefik:
+#    name: traefik
+#    external: true
