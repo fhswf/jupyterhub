@@ -48,4 +48,24 @@ class CustomSpawner(SwarmSpawner):
         ret.update({"NVIDIA_VISIBLE_DEVICES": "1"})
         print(ret)
         return ret
+    
 
+    # Shows frontend form to user for host selection
+    # The option values should correspond to the hostnames
+    # that appear in the `docker node ls` command output
+    def _options_form_default(self):
+        return """
+        <label for="hostname">Select your desired host</label>
+        <select name="hostname" size="1">
+            <option value="node1">node1 - GPU: RTX 2070 / CPU: 40</option>
+            <option value="node2">node2 - GPU: GTX 1080 / CPU: 32</option>
+        </select>
+        """
+
+    # Retrieve the selected choice and set the swarm placement constraints
+    def options_from_form(self, formdata):
+        options = {}
+        options['hostname'] = formdata['hostname']
+        hostname = ''.join(formdata['hostname'])
+        self.extra_placement_spec = { 'constraints' : ['node.hostname==' + hostname] }
+        return options
