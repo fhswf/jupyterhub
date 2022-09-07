@@ -5,6 +5,8 @@ import os
 import sys
 import docker
 
+from modules.CustomSpawner import CustomSpawner
+
 #===========================================================================
 #                            General Configuration
 #===========================================================================
@@ -35,12 +37,13 @@ c.JupyterHub.spawner_class = os.environ['JUPYTERHUB_SPAWNERCLASS']
 print("Starting with Spawnerclass: {}".format(os.environ['JUPYTERHUB_SPAWNERCLASS']))
 
 if os.environ['JUPYTERHUB_SPAWNERCLASS'] == "dockerspawner.SwarmSpawner":
-    c.SwarmSpawner.allowed_images = os.environ['DOCKER_JUPYTER_CONTAINERS'].split(",")
-    c.SwarmSpawner.debug = True
-    network_name = os.environ['DOCKER_NETWORK_NAME']
-    c.SwarmSpawner.network_name = network_name
-    c.SwarmSpawner.extra_host_config = {'network_mode': network_name}
-    c.SwarmSpawner.extra_placement_spec = { 'constraints' : ['node.role==worker'] }
+    # c.SwarmSpawner.allowed_images = os.environ['DOCKER_JUPYTER_CONTAINERS'].split(",")
+    # c.SwarmSpawner.debug = True
+    # network_name = os.environ['DOCKER_NETWORK_NAME']
+    # c.SwarmSpawner.network_name = network_name
+    # c.SwarmSpawner.extra_host_config = {'network_mode': network_name}
+    # c.SwarmSpawner.extra_placement_spec = { 'constraints' : ['node.role==worker'] }
+    raise Exception("Please use modules.CustomSpawner.CustomSpawner instead of {}".format(os.environ['JUPYTERHUB_SPAWNERCLASS']))
 
 elif  os.environ['JUPYTERHUB_SPAWNERCLASS'] == 'dockerspawner.DockerSpawner':
     c.DockerSpawner.network_name = os.environ['DOCKER_NETWORK_NAME']
@@ -53,7 +56,7 @@ elif  os.environ['JUPYTERHUB_SPAWNERCLASS'] == 'modules.CustomSpawner.CustomSpaw
     network_name = os.environ['DOCKER_NETWORK_NAME']
     c.Spawner.network_name = network_name
     c.Spawner.extra_host_config = {'network_mode': network_name}
-    c.SwarmSpawner.extra_placement_spec = { 'constraints' : ['node.role==worker'] } #TODO replace with node.label.gpu
+   
 
 else:
     raise Exception("illegal spawner class found in config {}".format(os.environ['JUPYTERHUB_SPAWNERCLASS']))
@@ -76,47 +79,14 @@ c.JupyterHub.shutdown_on_logout = True
 notebook_dir = os.environ.get('DOCKER_NOTEBOOK_DIR') or '/home/jovyan/work'
 c.DockerSpawner.notebook_dir = notebook_dir
 
-#c.DockerSpawner.volumes = {'jupyterhub-user-{username}': notebook_dir}
+c.DockerSpawner.volumes = {'/mnt/nfs_share/docker/jupytervolumes/jupyterhub-user-{username}': notebook_dir}
 #c.Spawner.env_keep = ['LD_LIBRARY_PATH'] # set in DOCKERFILE of spawned container 
 
-
-#def cumpute_env_value(spwner_instance):
-#    print("==================0envcall=============")
-#    logging.warning("==================0envcall=============")
-#    print(spwner_instance.__dict__)
-#    logging.warning(spwner_instance.__dict__)
-#    return "1"
-
-
-# theese dont do anything aparently, have have to use our own spawner
-#c.Spawner.env_keep = ["NVIDIA_VISIBLE_DEVICES"]
-#c.Spawner.environment = {
-#    'NB_USER': "${JUPYTERHUB_USER}", 
-#    'CHOWN_HOME': 'yes',
-#    "NVIDIA_VISIBLE_DEVICES": cumpute_env_value
-#    }
-#c.SwarmSpawner.env_keep = ["NVIDIA_VISIBLE_DEVICES"]
-#c.SwarmSpawner.environment = {
-#    'NB_USER': "${JUPYTERHUB_USER}", 
-#    'CHOWN_HOME': 'yes',
-#    "NVIDIA_VISIBLE_DEVICES": cumpute_env_value
-#    }
-#c.DockerSpawner.env_keep = ["NVIDIA_VISIBLE_DEVICES"]
-#c.DockerSpawner.environment = {
-#    'NB_USER': "${JUPYTERHUB_USER}", 
-#    'CHOWN_HOME': 'yes',
-#    "NVIDIA_VISIBLE_DEVICES": cumpute_env_value
-#    }
-
-
-
-# what is this for? we cant use it with swarm as create_service() from docker.py does not allow this argument
-# c.DockerSpawner.extra_create_kwargs = {"user": "root"}
 
 #===========================================================================
 #                            GPU Stuff
 #===========================================================================
-# TODO make this dependend on user/moodle/group
+# TODO make this dependend on user/moodle/group, also this does noting for swarm deployment
 c.DockerSpawner.extra_host_config = {
     "runtime": "nvidia",
     "device_requests": [

@@ -3,20 +3,18 @@ services:
   gputest_single:
     image: nvidia/cuda:11.7.1-base-ubuntu18.04
     #runtime: nvidia
-    environment:
-      - NVIDIA_VISIBLE_DEVICES=1
+    #environment:
+    #  - NVIDIA_VISIBLE_DEVICES=1
     command: 
       - bash
       - -c
       - nvidia-smi && sleep infinity
     deploy:
       replicas: 4
-#      resources:
-#        reservations:
-#          generic_resources:
-#            - discrete_resource_spec:
-#              kind: 'NVIDIA-GPU'
-#              value: 2
+      generic_resources:
+        - discrete_resource_spec:
+          kind: 'NVIDIA-GPU'
+          value: 2
 
 
 #  gputest_multi:

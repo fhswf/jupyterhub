@@ -11,6 +11,7 @@ services:
       - 8986:8001
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
+      - /mnt/nfs_share/docker/jupytervolumes:/mnt/nfs_share/docker/jupytervolumes
 #      - /var/data/jupyterhub:/srv/jupyterhub
     environment:
       #- DOCKER_JUPYTER_CONTAINER=jupyterlab_img
