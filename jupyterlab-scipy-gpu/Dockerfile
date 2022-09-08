@@ -28,7 +28,9 @@ USER $NB_UID
 
 RUN pip install -U jupyterhub
 
-RUN conda install -y -c conda-forge cudatoolkit=${CUDAVERSION} cudnn=${CUDNNVERSION}
+RUN conda install -y -c conda-forge pytorch torchvision torchaudio cudatoolkit=${CUDAVERSION} cudnn=${CUDNNVERSION} -c pytorch -c nvidia
+#RUN conda install pytorch torchvision torchaudio cudatoolkit=11.1 -c pytorch -c nvidia
+
 
 USER root
 
