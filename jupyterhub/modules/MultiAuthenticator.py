@@ -170,9 +170,12 @@ class MultiAuthenticator(Authenticator):
         """
 
         if isinstance(handler, LTIAuthenticateHandler):
-            return await maybe_future(self.lti_authenticator.authenticate(handler, data))
+            #self.authenticated_via = "lti"
+            ret = await maybe_future(self.lti_authenticator.authenticate(handler, data))
         else:
-            return await maybe_future(self.keycloak_authenticator.authenticate(handler, data))
+            #self.authenticated_via = "keycloak"
+            ret =  await maybe_future(self.keycloak_authenticator.authenticate(handler, data))
+        return ret
 
     async def pre_spawn_start(self, user, spawner):
         """
@@ -181,16 +184,26 @@ class MultiAuthenticator(Authenticator):
 
         Make sure to enable auth_state, otherwise this function wont work.
         """
-
         auth_state = await user.get_auth_state()
         if not auth_state:
             print("pre_spawn_start: auth_state not enabled")
-            return
-
-        group_names = [group.name for group in spawner.user.groups]
-
-        print("========================== GRUPPEN ===========================")
-        print(group_names)
+            return  
+        _swarm_nodes = await spawner.docker("nodes")
+        swarm_nodes = []
+        for _node in _swarm_nodes:
+            node = {}
+            node["ID"] = _node["ID"]
+            node["Hostname"]  = _node["Description"]["Hostname"] 
+            node["Resources"] = _node["Description"]["Resources"]
+            node["Labels"] = _node["Spec"]["Labels"]
+            node["Role"] = _node["Spec"]["Role"]
+            swarm_nodes.append(node)
+            
+        #group_names = [group.name for group in spawner.user.groups]
+        spawner._custom_extra_config = {
+            "auth_sate_scope": auth_state["scope"],  #"authenticated_via": self.authenticated_via, # TODO 
+            "swarm_nodes": swarm_nodes
+        }
 
         spawner.environment = {
             'NB_USER': spawner.user.name,

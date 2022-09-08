@@ -1,8 +1,11 @@
+import logging
 from jupyterhub.auth import DummyAuthenticator
 from modules.MultiAuthenticator import MultiAuthenticator
 import os
 import sys
 import docker
+
+from modules.CustomSpawner import CustomSpawner
 
 #===========================================================================
 #                            General Configuration
@@ -11,6 +14,7 @@ import docker
 c.JupyterHub.admin_access = True
 c.JupyterHub.template_paths = ['templates']
 c.Application.log_level = "DEBUG"
+c.JupyterHub.log_level = logging.DEBUG
 
 c.Spawner.default_url = '/lab'
 c.JupyterHub.base_url = os.environ['HUB_BASE_URL_PREFIX'] + "/"
@@ -29,10 +33,34 @@ c.JupyterHub.authenticator_class = MultiAuthenticator
 #                            Docker Spawner Configuration
 #===========================================================================
 
-c.JupyterHub.spawner_class = 'dockerspawner.DockerSpawner'
-c.DockerSpawner.network_name = os.environ['DOCKER_NETWORK_NAME']
-#c.DockerSpawner.image = os.environ['DOCKER_JUPYTER_CONTAINER']
-c.DockerSpawner.allowed_images = os.environ['DOCKER_JUPYTER_CONTAINERS'].split(",")
+c.JupyterHub.spawner_class = os.environ['JUPYTERHUB_SPAWNERCLASS']
+print("Starting with Spawnerclass: {}".format(os.environ['JUPYTERHUB_SPAWNERCLASS']))
+
+if os.environ['JUPYTERHUB_SPAWNERCLASS'] == "dockerspawner.SwarmSpawner":
+    # c.SwarmSpawner.allowed_images = os.environ['DOCKER_JUPYTER_CONTAINERS'].split(",")
+    # c.SwarmSpawner.debug = True
+    # network_name = os.environ['DOCKER_NETWORK_NAME']
+    # c.SwarmSpawner.network_name = network_name
+    # c.SwarmSpawner.extra_host_config = {'network_mode': network_name}
+    # c.SwarmSpawner.extra_placement_spec = { 'constraints' : ['node.role==worker'] }
+    raise Exception("Please use modules.CustomSpawner.CustomSpawner instead of {}".format(os.environ['JUPYTERHUB_SPAWNERCLASS']))
+
+elif  os.environ['JUPYTERHUB_SPAWNERCLASS'] == 'dockerspawner.DockerSpawner':
+    c.DockerSpawner.network_name = os.environ['DOCKER_NETWORK_NAME']
+    #c.DockerSpawner.image = os.environ['DOCKER_JUPYTER_CONTAINER']
+    c.DockerSpawner.allowed_images = os.environ['DOCKER_JUPYTER_CONTAINERS'].split(",") 
+
+elif  os.environ['JUPYTERHUB_SPAWNERCLASS'] == 'modules.CustomSpawner.CustomSpawner':
+    c.Spawner.allowed_images = os.environ['DOCKER_JUPYTER_CONTAINERS'].split(",")
+    c.Spawner.debug = True
+    network_name = os.environ['DOCKER_NETWORK_NAME']
+    c.Spawner.network_name = network_name
+    c.Spawner.extra_host_config = {'network_mode': network_name}
+   
+
+else:
+    raise Exception("illegal spawner class found in config {}".format(os.environ['JUPYTERHUB_SPAWNERCLASS']))
+
 
 if "DOCKER_PERSIST_NOTEBOOK" in os.environ.keys():
     c.Spawner.remove = not os.environ['DOCKER_PERSIST_NOTEBOOK']
@@ -44,26 +72,24 @@ c.Spawner.start_timeout=300
 
 # -> https://github.com/jupyterhub/dockerspawner/blob/master/examples/oauth/jupyterhub_config.py
 c.JupyterHub.hub_ip = os.environ['HUB_IP']
-
 c.JupyterHub.shutdown_on_logout = True
 
 # user data persistence
 # -> https://github.com/jupyterhub/dockerspawner#data-persistence-and-dockerspawner
 notebook_dir = os.environ.get('DOCKER_NOTEBOOK_DIR') or '/home/jovyan/work'
 c.DockerSpawner.notebook_dir = notebook_dir
-c.DockerSpawner.volumes = {'jupyterhub-user-{username}': notebook_dir}
+hub_ip = os.environ.get('HUB_IP')
+if "VOLUME_PATH_PREFIX" in os.environ:
+    mount_prefix = os.environ.get('VOLUME_PATH_PREFIX')
+else:
+    mount_prefix = "userdata"
+c.DockerSpawner.volumes = {'/mnt/nfs_share/docker/jupyterhub/' + mount_prefix + '/' + hub_ip + '/jupyterhub-user-{username}/_data': notebook_dir}
 #c.Spawner.env_keep = ['LD_LIBRARY_PATH'] # set in DOCKERFILE of spawned container 
-c.DockerSpawner.environment = {
-    'NB_USER': '${JUPYTERHUB_USER}', 
-    'CHOWN_HOME': 'yes',
-    }
-c.DockerSpawner.extra_create_kwargs = {"user": "root"}
-
 
 #===========================================================================
 #                            GPU Stuff
 #===========================================================================
-# TODO make this dependend on user/moodle/group
+# TODO make this dependend on user/moodle/group, also this does noting for swarm deployment
 c.DockerSpawner.extra_host_config = {
     "runtime": "nvidia",
     "device_requests": [

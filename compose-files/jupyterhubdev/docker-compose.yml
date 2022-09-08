@@ -1,13 +1,13 @@
 version: '3'
 
 services:
-  jupyterhub:
+  jupyterhubdev:
     image: ${JUPYTERHUB_IMAGE}
     #container_name: jupyterhub
     expose:
       - 8001
     ports:
-      - 8885:8000
+      - 8985:8000
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - /mnt/nfs_share/docker/jupyterhub:/mnt/nfs_share/docker/jupyterhub
@@ -17,8 +17,8 @@ services:
       - DOCKER_JUPYTER_CONTAINERS=jupyterlab_testimg,ghcr.io/fhswf/jupyterhub/jupyterlab-scipy-gpu:main,ghcr.io/fhswf/jupyterhub/jupyterlab-scipy-cpu:main
       #- DOCKER_SPAWN_ENVS=NVIDIA_VISIBLE_DEVICES:1
       - JUPYTERHUB_SPAWNERCLASS=modules.CustomSpawner.CustomSpawner
-      - DOCKER_NETWORK_NAME=jupyterhub_swarm_network
-      - HUB_IP=jupyterhub # same as serivce name
+      - DOCKER_NETWORK_NAME=jupyterhub_swarm_network_dev
+      - HUB_IP=jupyterhubdev # same as serivce name
       - HOST
       - JUPYTERHUB_CRYPT_KEY=${JUPYTERHUB_CRYPT_KEY}
       - HUB_BASE_URL_PREFIX=${HUB_BASE_URL_PREFIX}
@@ -40,7 +40,7 @@ services:
       - OAUTH2_USERDATA_URL=${OAUTH2_INTERNAL_USERDATA_URL}
     networks:
       - traefik
-      - jupyterhub_swarm_network
+      - jupyterhub_swarm_network_dev
       #- local_keycloak
     #labels:
     #  - traefik.enable=true
@@ -55,7 +55,7 @@ networks:
   traefik:
     #name: traefik
     external: true
-  jupyterhub_swarm_network:
+  jupyterhub_swarm_network_dev:
     driver: overlay
     external: true
     attachable: true
