@@ -28,7 +28,8 @@ USER $NB_UID
 
 RUN pip install -U jupyterhub
 
-RUN conda install -y -c conda-forge cudatoolkit=${CUDAVERSION} cudnn=${CUDNNVERSION}
+#RUN conda install -y -c conda-forge cudatoolkit=${CUDAVERSION} cudnn=${CUDNNVERSION}
+RUN pip3 install torch==1.9.0+cu111 torchvision==0.10.0+cu111 torchaudio==0.9.0 -f https://download.pytorch.org/whl/torch_stable.html
 
 USER root
 
