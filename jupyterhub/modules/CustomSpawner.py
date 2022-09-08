@@ -1,3 +1,5 @@
+import grp
+import pwd
 from typing import Any, Dict, List, Tuple
 from dockerspawner import SwarmSpawner
 from docker.types import Mount 
@@ -171,13 +173,19 @@ class CustomSpawner(SwarmSpawner):
                     return True
             raise FileNotFoundError("can not find mounted volume directory, {}".format(substring))
             
-        for key in spawner.volumes.keys():
+
+        for key, value in spawner.volumes.items():
+            spawner.volumes[key] = self.format_string(value)
             mount_point = spawner.format_volume_name(key, self)
-            print(mount_point)
             # absolute bind poath start with /
             if mount_point.startswith("/") and _check_mount_point(mounts, mount_point):
                 if not os.path.exists(mount_point):
                     os.makedirs(mount_point)
+                    uid = pwd.getpwnam("root").pw_uid
+                    gid = grp.getgrnam("users").gr_gid
+                    os.chown(mount_point, uid, gid)
+                    os.chmod(mount_point, 0o775)
+                    
 
         # TODO make image selection more sophisticated        
         if "gpu" in self.user_options["image"]:

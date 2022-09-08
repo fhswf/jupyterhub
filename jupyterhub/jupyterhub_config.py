@@ -78,10 +78,13 @@ c.JupyterHub.shutdown_on_logout = True
 # -> https://github.com/jupyterhub/dockerspawner#data-persistence-and-dockerspawner
 notebook_dir = os.environ.get('DOCKER_NOTEBOOK_DIR') or '/home/jovyan/work'
 c.DockerSpawner.notebook_dir = notebook_dir
-
-c.DockerSpawner.volumes = {'/mnt/nfs_share/docker/jupytervolumes/jupyterhub-user-{username}': notebook_dir}
+hub_ip = os.environ.get('HUB_IP')
+if "VOLUME_PATH_PREFIX" in os.environ:
+    mount_prefix = os.environ.get('VOLUME_PATH_PREFIX')
+else:
+    mount_prefix = "userdata"
+c.DockerSpawner.volumes = {'/mnt/nfs_share/docker/jupyterhub/' + mount_prefix + '/' + hub_ip + '/jupyterhub-user-{username}/_data': notebook_dir}
 #c.Spawner.env_keep = ['LD_LIBRARY_PATH'] # set in DOCKERFILE of spawned container 
-
 
 #===========================================================================
 #                            GPU Stuff
