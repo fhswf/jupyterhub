@@ -7,7 +7,7 @@ services:
     expose:
       - 8001
     ports:
-      - 8085:8000
+      - 8885:8000
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - /mnt/nfs_share/docker/jupyterhub:/mnt/nfs_share/docker/jupyterhub
