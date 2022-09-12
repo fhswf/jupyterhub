@@ -88,7 +88,10 @@ if "VOLUME_PATH_PREFIX" in os.environ:
     mount_prefix = os.environ.get('VOLUME_PATH_PREFIX')
 else:
     mount_prefix = "userdata"
-c.DockerSpawner.volumes = {'/mnt/nfs_share/docker/jupyterhub/' + mount_prefix + '/jupyterhub-user-{username}/_data': notebook_dir}
+c.DockerSpawner.volumes = {
+    '/mnt/nfs_share/docker/jupyterhub/' + mount_prefix + '/jupyterhub-user-{username}/_data': notebook_dir, 
+    '/mnt/nfs_share/docker/jupyterhub/' + mount_prefix + '/jupyterhub-user-{username}/_data': '/home/{username}/work'
+}
 #c.Spawner.env_keep = ['LD_LIBRARY_PATH'] # set in DOCKERFILE of spawned container 
 
 #===========================================================================
