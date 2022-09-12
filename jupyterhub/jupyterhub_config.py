@@ -77,6 +77,8 @@ if "HUB_IP" in os.environ:
 if "HUB_CONNECT_IP" in os.environ:
     c.JupyterHub.hub_connect_ip = os.environ['HUB_CONNECT_IP']
 c.JupyterHub.shutdown_on_logout = True
+if "LAB_HUB_API_URL" in os.environ:
+    c.Spawner.hub_connect_url = os.environ['LAB_HUB_API_URL']
 
 # user data persistence
 # -> https://github.com/jupyterhub/dockerspawner#data-persistence-and-dockerspawner
