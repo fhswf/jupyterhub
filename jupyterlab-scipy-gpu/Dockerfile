@@ -40,11 +40,12 @@ RUN echo CPATH="${CPATH}" >> /etc/environment
 USER $NB_UID
 
 # install torch with gpu support
-RUN pip install torch==1.11.0+cu113 torchvision==0.12.0+cu113 torchaudio==0.12.0 --extra-index-url https://download.pytorch.org/whl/cu113
+RUN pip install torch==1.11.0+cu113 torchvision==0.12.0+cu113 torchaudio==0.11.0 --extra-index-url https://download.pytorch.org/whl/cu113
 
 # install tensorflow/keras
-#RUN pip install tensorflow 
-RUN conda install -y -c conda-forge tensorflow-gpu cudatoolkit-dev cudnn
+RUN pip install tensorflow 
+# not sure if needed, but the dev kit contains some extra libaries
+RUN conda install -y cudatoolkit-dev 
 
 # RUN pip install -U jupyterhub
 RUN pip install scilab-kernel 
