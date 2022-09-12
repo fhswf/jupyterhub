@@ -115,14 +115,14 @@ class CustomSpawner(SwarmSpawner):
             gpu_options_t.format(
                 gpu=gpu
             )
-            for gpu in ["gpu-1", "gpu-2", "gpu-3", "gpu-4"]
+            for gpu in ["yes", "no"]
         ]
         return """
         <label for="image">Select an image and a GPU to use</label>
         <select class="form-control" name="image" required autofocus>
         {image_options}
         </select><div><br/></div>
-        <label for="image">Select an image and a GPU to use</label>
+        <label for="image">Do you want to have a gpu?</label>
         <select class="form-control" name="gpu">
         {gpu_options}
         </select>    
@@ -186,9 +186,8 @@ class CustomSpawner(SwarmSpawner):
                     os.chown(mount_point, uid, gid)
                     os.chmod(mount_point, 0o775)
                     
-
         # TODO make image selection more sophisticated        
-        if "gpu" in self.user_options["image"]:
+        if "yes" in self.user_options["gpu"]:
             
             gpus = {} # get aviable gpus. TODO maybe cache this?
             for swarm_node in spawner._custom_extra_config["swarm_nodes"]:
@@ -205,6 +204,8 @@ class CustomSpawner(SwarmSpawner):
             print(_id, gpu)
             self.extra_placement_spec.update({ 'constraints' : ['node.role==worker', "node.id=={}".format(_id)] }) # TODO replace worker with gpu label
             self.environment.update({"NVIDIA_VISIBLE_DEVICES": gpu})
+            self.environment.update({"NVIDIA_DRIVER_CAPABILITIES": "compute,utility"})
+            self.environment.update({"NVIDIA_REQUIRE_CUDA": "cuda>=11"})
             print(self.extra_placement_spec)
             print(self.environment)
         else:

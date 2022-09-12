@@ -1,8 +1,8 @@
 ARG CUDAVERSION=11.7
 ARG CUDNNVERSION=8.1.0
 
-#FROM ghcr.io/fhswf/jupyterhub-docker-stacks/scipy-notebook:latest
-FROM jupyter/scipy-notebook:latest
+FROM ghcr.io/fhswf/jupyterhub-docker-stacks/scipy-notebook:latest
+#FROM jupyter/scipy-notebook:latest
 
 # some alternative route is here: https://github.com/iot-salzburg/gpu-jupyter
 # not sure if this version is better then what we have now
