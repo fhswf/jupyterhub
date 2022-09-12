@@ -58,6 +58,6 @@ networks:
   jupyterhub_swarm_network:
     driver: overlay
     external: true
-    attachable: true
+    #attachable: true
   #local_keycloak:
   #  external: true
