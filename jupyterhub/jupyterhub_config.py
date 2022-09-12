@@ -71,19 +71,27 @@ c.Spawner.http_timeout=120
 c.Spawner.start_timeout=300
 
 # -> https://github.com/jupyterhub/dockerspawner/blob/master/examples/oauth/jupyterhub_config.py
-c.JupyterHub.hub_ip = os.environ['HUB_IP']
+if "HUB_IP" in os.environ:
+    hub_ip = os.environ.get('HUB_IP')
+    c.JupyterHub.hub_ip = os.environ['HUB_IP']
+if "HUB_CONNECT_IP" in os.environ:
+    c.JupyterHub.hub_connect_ip = os.environ['HUB_CONNECT_IP']
 c.JupyterHub.shutdown_on_logout = True
+if "LAB_HUB_API_URL" in os.environ:
+    c.Spawner.hub_connect_url = os.environ['LAB_HUB_API_URL']
 
 # user data persistence
 # -> https://github.com/jupyterhub/dockerspawner#data-persistence-and-dockerspawner
 notebook_dir = os.environ.get('DOCKER_NOTEBOOK_DIR') or '/home/jovyan/work'
 c.DockerSpawner.notebook_dir = notebook_dir
-hub_ip = os.environ.get('HUB_IP')
 if "VOLUME_PATH_PREFIX" in os.environ:
     mount_prefix = os.environ.get('VOLUME_PATH_PREFIX')
 else:
     mount_prefix = "userdata"
-c.DockerSpawner.volumes = {'/mnt/nfs_share/docker/jupyterhub/' + mount_prefix + '/' + hub_ip + '/jupyterhub-user-{username}/_data': notebook_dir}
+c.DockerSpawner.volumes = {
+    '/mnt/nfs_share/docker/jupyterhub/' + mount_prefix + '/jupyterhub-user-{username}/_data': notebook_dir, 
+    '/mnt/nfs_share/docker/jupyterhub/' + mount_prefix + '/jupyterhub-user-{username}/_data': '/home/{username}/work'
+}
 #c.Spawner.env_keep = ['LD_LIBRARY_PATH'] # set in DOCKERFILE of spawned container 
 
 #===========================================================================
@@ -103,7 +111,7 @@ c.DockerSpawner.extra_host_config = {
 #===========================================================================
 #                            Other Configuration
 #===========================================================================
-c.Spawner.cpu_limit = 8
+c.Spawner.cpu_limit = 16
 c.Spawner.mem_limit = '40G'
 
 c.JupyterHub.load_roles = [

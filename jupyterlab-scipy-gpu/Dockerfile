@@ -1,8 +1,8 @@
 ARG CUDAVERSION=11.7
 ARG CUDNNVERSION=8.1.0
 
-#FROM ghcr.io/fhswf/jupyterhub-docker-stacks/scipy-notebook:latest
-FROM jupyter/scipy-notebook:latest
+FROM ghcr.io/fhswf/jupyterhub-docker-stacks/scipy-notebook:latest
+#FROM jupyter/scipy-notebook:latest
 
 # some alternative route is here: https://github.com/iot-salzburg/gpu-jupyter
 # not sure if this version is better then what we have now
@@ -21,6 +21,9 @@ RUN apt-get update && \
     pari-gp \
     libpari-dev \
     libgmp-dev \
+    htop \
+    wget \
+    iputils-ping \
     && apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
@@ -33,6 +36,8 @@ USER root
 
 ENV LD_LIBRARY_PATH=${CONDA_DIR}/lib/:${LD_LIBRARY_PATH}
 RUN echo LD_LIBRARY_PATH="${LD_LIBRARY_PATH}" >> /etc/environment 
+ENV CPATH=$CONDA_DIR/include
+RUN echo CPATH="${CPATH}" >> /etc/environment
 
 USER $NB_UID
 
