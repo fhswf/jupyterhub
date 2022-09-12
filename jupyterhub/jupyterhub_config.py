@@ -108,7 +108,7 @@ c.DockerSpawner.extra_host_config = {
 #===========================================================================
 #                            Other Configuration
 #===========================================================================
-c.Spawner.cpu_limit = 8
+c.Spawner.cpu_limit = 16
 c.Spawner.mem_limit = '40G'
 
 c.JupyterHub.load_roles = [
