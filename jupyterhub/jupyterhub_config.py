@@ -71,7 +71,10 @@ c.Spawner.http_timeout=120
 c.Spawner.start_timeout=300
 
 # -> https://github.com/jupyterhub/dockerspawner/blob/master/examples/oauth/jupyterhub_config.py
-c.JupyterHub.hub_ip = os.environ['HUB_IP']
+if "HUB_IP" in os.environ:
+    c.JupyterHub.hub_ip = os.environ['HUB_IP']
+if "HUB_CONNECT_IP" in os.environ:
+    c.JupyterHub.hub_connect_ip = os.environ['HUB_CONNECT_IP']
 c.JupyterHub.shutdown_on_logout = True
 
 # user data persistence
