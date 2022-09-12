@@ -21,33 +21,30 @@ RUN apt-get update && \
     pari-gp \
     libpari-dev \
     libgmp-dev \
+    htop \
+    wget \
+    iputils-ping \
     && apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-USER $NB_UID
 
-RUN pip install -U jupyterhub
-
-RUN conda install -y -c conda-forge pytorch torchvision torchaudio cudatoolkit=${CUDAVERSION} cudnn=${CUDNNVERSION} -c pytorch -c nvidia
+# RUN conda install -y -c conda-forge pytorch torchvision torchaudio cudatoolkit=${CUDAVERSION} cudnn=${CUDNNVERSION} -c pytorch -c nvidia
 #RUN conda install pytorch torchvision torchaudio cudatoolkit=11.1 -c pytorch -c nvidia
 
-
-USER root
-
+# set up extra envs
 ENV LD_LIBRARY_PATH=${CONDA_DIR}/lib/:${LD_LIBRARY_PATH}
 RUN echo LD_LIBRARY_PATH="${LD_LIBRARY_PATH}" >> /etc/environment 
+ENV CPATH=$CONDA_DIR/include
+RUN echo CPATH="${CPATH}" >> /etc/environment
 
 USER $NB_UID
 
-RUN pip install \
-    # pycuda \
-    tensorflow \
-    torch \
-    torchvision \
-    torchaudio 
-    #--extra-index-url https://download.pytorch.org/whl/cu102
+# install torch with gpu support
+RUN pip install torch==1.11.0+cu113 torchvision==0.12.0+cu113 torchaudio==0.12.0 --extra-index-url https://download.pytorch.org/whl/cu113
 
-ENV CPATH=$CONDA_DIR/include
+# install tensorflow/keras
+#RUN pip install tensorflow 
+RUN conda install -y -c conda-forge tensorflow-gpu cudatoolkit-dev cudnn
 
-RUN pip install \
-    scilab-kernel 
+# RUN pip install -U jupyterhub
+RUN pip install scilab-kernel 
