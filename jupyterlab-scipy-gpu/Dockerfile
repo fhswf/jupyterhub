@@ -26,11 +26,8 @@ RUN apt-get update && \
 
 USER $NB_UID
 
-RUN pip install -U jupyterhub
-
-RUN conda install -y -c conda-forge pytorch torchvision torchaudio cudatoolkit=${CUDAVERSION} cudnn=${CUDNNVERSION} -c pytorch -c nvidia
-#RUN conda install pytorch torchvision torchaudio cudatoolkit=11.1 -c pytorch -c nvidia
-
+RUN pip install jupyterhub scilab-kernel \
+    pip  install torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu116
 
 USER root
 
@@ -39,15 +36,4 @@ RUN echo LD_LIBRARY_PATH="${LD_LIBRARY_PATH}" >> /etc/environment
 
 USER $NB_UID
 
-RUN pip install \
-    # pycuda \
-    tensorflow \
-    torch \
-    torchvision \
-    torchaudio 
-    #--extra-index-url https://download.pytorch.org/whl/cu102
-
-ENV CPATH=$CONDA_DIR/include
-
-RUN pip install \
-    scilab-kernel 
+ENV CPATH=$CONDA_DIR/include:$CPATH
