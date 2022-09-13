@@ -27,11 +27,13 @@ RUN apt-get update && \
     && apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
+USER $NB_UID
 
-# RUN conda install -y -c conda-forge pytorch torchvision torchaudio cudatoolkit=${CUDAVERSION} cudnn=${CUDNNVERSION} -c pytorch -c nvidia
-#RUN conda install pytorch torchvision torchaudio cudatoolkit=11.1 -c pytorch -c nvidia
+RUN pip install jupyterhub scilab-kernel \
+    pip  install torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu116
 
-# set up extra envs
+USER root
+
 ENV LD_LIBRARY_PATH=${CONDA_DIR}/lib/:${LD_LIBRARY_PATH}
 RUN echo LD_LIBRARY_PATH="${LD_LIBRARY_PATH}" >> /etc/environment 
 ENV CPATH=$CONDA_DIR/include
@@ -39,13 +41,4 @@ RUN echo CPATH="${CPATH}" >> /etc/environment
 
 USER $NB_UID
 
-# install torch with gpu support
-RUN pip install torch==1.11.0+cu113 torchvision==0.12.0+cu113 torchaudio==0.11.0 --extra-index-url https://download.pytorch.org/whl/cu113
-
-# install tensorflow/keras
-RUN pip install tensorflow 
-# not sure if needed, but the dev kit contains some extra libaries
-RUN conda install -y cudatoolkit-dev 
-
-# RUN pip install -U jupyterhub
-RUN pip install scilab-kernel 
+ENV CPATH=$CONDA_DIR/include:$CPATH
