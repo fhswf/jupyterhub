@@ -200,8 +200,13 @@ class MultiAuthenticator(Authenticator):
             swarm_nodes.append(node)
             
         #group_names = [group.name for group in spawner.user.groups]
-        spawner._custom_extra_config = {
-            "auth_sate_scope": auth_state["scope"],  #"authenticated_via": self.authenticated_via, # TODO 
+        #auth_state["scope"] in case of oid this is oid #"authenticated_via": self.authenticated_via, # TODO 
+        if "scope" in auth_state:
+            scope = auth_state["scope"]
+        else:
+            scope = "lti"
+        spawner._custom_extra_config = { 
+            "auth_sate_scope":  scope, 
             "swarm_nodes": swarm_nodes
         }
 
