@@ -198,16 +198,23 @@ class MultiAuthenticator(Authenticator):
             node["Labels"] = _node["Spec"]["Labels"]
             node["Role"] = _node["Spec"]["Role"]
             swarm_nodes.append(node)
-            
+        import docker
+        from docker.models.images import Image
+
+        images = []
+        _images = spawner.docker("images", {"label": ["fhswf.jupyterhub.runtime"]})
+        if isinstance(_images, list):
+            for i in _images:
+                images.append(i)
+        else:
+            if isinstance(_images, Image):
+                images.append(_images)
         #group_names = [group.name for group in spawner.user.groups]
         #auth_state["scope"] in case of oid this is oid #"authenticated_via": self.authenticated_via, # TODO 
-        if "scope" in auth_state:
-            scope = auth_state["scope"]
-        else:
-            scope = "lti"
         spawner._custom_extra_config = { 
-            "auth_sate_scope":  scope, 
-            "swarm_nodes": swarm_nodes
+            "auth_state":  auth_state, 
+            "swarm_nodes": swarm_nodes,
+            "images": images
         }
 
         spawner.environment = {

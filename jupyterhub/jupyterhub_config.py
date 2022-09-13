@@ -36,6 +36,10 @@ c.JupyterHub.authenticator_class = MultiAuthenticator
 c.JupyterHub.spawner_class = os.environ['JUPYTERHUB_SPAWNERCLASS']
 print("Starting with Spawnerclass: {}".format(os.environ['JUPYTERHUB_SPAWNERCLASS']))
 
+def _filter_allowed_images(spawner):
+    images = spawner.docker("images", {"label": ["fhswf.jupyterhub.runtime"]})
+    return images
+
 if os.environ['JUPYTERHUB_SPAWNERCLASS'] == "dockerspawner.SwarmSpawner":
     # c.SwarmSpawner.allowed_images = os.environ['DOCKER_JUPYTER_CONTAINERS'].split(",")
     # c.SwarmSpawner.debug = True
@@ -51,7 +55,10 @@ elif  os.environ['JUPYTERHUB_SPAWNERCLASS'] == 'dockerspawner.DockerSpawner':
     c.DockerSpawner.allowed_images = os.environ['DOCKER_JUPYTER_CONTAINERS'].split(",") 
 
 elif  os.environ['JUPYTERHUB_SPAWNERCLASS'] == 'modules.CustomSpawner.CustomSpawner':
-    c.Spawner.allowed_images = os.environ['DOCKER_JUPYTER_CONTAINERS'].split(",")
+    if "DOCKER_JUPYTER_CONTAINERS" in os.environ:
+        c.Spawner.allowed_images = os.environ['DOCKER_JUPYTER_CONTAINERS'].split(",")
+    else:
+        c.Spawner.allowed_images = _filter_allowed_images
     c.Spawner.debug = True
     network_name = os.environ['DOCKER_NETWORK_NAME']
     c.Spawner.network_name = network_name
