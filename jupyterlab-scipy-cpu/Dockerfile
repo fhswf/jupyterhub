@@ -32,3 +32,7 @@ ENV CPATH=$CONDA_DIR/include
 
 RUN pip install \
     scilab-kernel 
+    
+# the label fhswf.jupyterhub.runtime has to be present for runtime detection of available images 
+LABEL fhswf.jupyterhub.runtime="CPU"
+LABEL fhswf.jupyterhub.moodle.course.id="8161"
