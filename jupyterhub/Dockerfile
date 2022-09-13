@@ -12,4 +12,5 @@ RUN pip install \
     jupyterhub-idle-culler \
     dockerspawner \
     jupyterhub-traefik-proxy \
+    nbgitpuller \
     MultiAuthenticator
