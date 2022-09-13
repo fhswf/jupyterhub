@@ -155,9 +155,9 @@ class CustomSpawner(SwarmSpawner):
             username = spawner.user.name
         c.Spawner.pre_spawn_hook = my_hook
         """
-        print("================ run pre_spawn_hook ================")
         username = spawner.user.name
-        print(username, spawner.user)
+        print(username)
+        print(spawner.user.get_auth_state())
         # make sure we cant mount nfs_share
         # key is source outside container, val is target inside container
         mounts : List[str]
@@ -199,13 +199,11 @@ class CustomSpawner(SwarmSpawner):
                                        
             update_gpus(gpus)
             _id, gpu = add_gpu_spawn()
-            print(_id, gpu)
             self.extra_placement_spec.update({ 'constraints' : ['node.role==worker', "node.id=={}".format(_id)] }) # TODO replace worker with gpu label
             self.environment.update({"NVIDIA_VISIBLE_DEVICES": gpu})
             self.environment.update({"NVIDIA_DRIVER_CAPABILITIES": "compute,utility"})
             self.environment.update({"NVIDIA_REQUIRE_CUDA": "cuda>=11"})
-            print(self.extra_placement_spec)
-            print(self.environment)
+
         else:
             self.environment.update({"NVIDIA_VISIBLE_DEVICES": "void"})
         self.extra_container_spec.update({"user": "root"})

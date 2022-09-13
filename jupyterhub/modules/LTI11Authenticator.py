@@ -81,9 +81,9 @@ class LTI11Authenticator(Authenticator):
             # Vor- und Nachname in der Form 'nachname_vorname':
             # user_name = handler.get_body_argument('lis_person_name_family') + "_" + handler.get_body_argument('lis_person_name_given')
             # Erster Teil der Mailadresse (alles vor dem '@'):
-            user_name = handler.get_body_argument(
-                'lis_person_contact_email_primary')
-            user_name = user_name.split("@")[0]  # '@...' entfernen
+            #user_name = handler.get_body_argument('lis_person_contact_email_primary')
+            #user_name = user_name.split("@")[0]  # '@...' entfernen
+            user_name = handler.get_body_argument("ext_user_username")
 
             # Enable the formgrader and the course_list for instructors
             # Fix this if you want to have more extensions than nbgrader
