@@ -86,9 +86,7 @@ class CustomSpawner(SwarmSpawner):
         """
         get called prior to self.docker("create_service", ...) or self.docker("create_container", ...)
         """
-        print("==============GET ENV=================")
         ret = super().get_env(*args, **kwargs)
-        print(ret)
         return ret
     
 
