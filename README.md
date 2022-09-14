@@ -28,5 +28,16 @@ A Juptyer Notebook server will always shutdown on logout.
 
 ## Installation
 ## Configuration
+## Dockerimages
+Jupyterhub deploys Jupyterlab instances as docker containers. With Docker Swarm (not swarm mode) you have to make sure that all nodes have the image already pulled as Jupyterhub currently does not pull them.
+When logging in via Moodle LTI, i.e. via a link in a course, a course id gets transmitted. Jupyterhub will look for that id and search for available images with that id as a label, i.e.
+```Dockerfile
+    LABEL fhswf.jupyterhub.moodle.course.id="1234"
+```
+You can create a new Version of any image an give it a label with a single command:
+```bash
+    echo "FROM registry.io/image:tag | sudo docker build --label fhswf.jupyterhub.moodle.course.id="8161" -t "registry.io/image:moodlecourse-16385" -
+```
+The image has to present on all cluster nodes. So either run this command on all nodes or export and import the newly labeled image.
 ## Contributing
 ## License
