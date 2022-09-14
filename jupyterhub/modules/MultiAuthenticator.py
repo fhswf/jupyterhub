@@ -168,7 +168,7 @@ class MultiAuthenticator(Authenticator):
         """
         Delegate authentication to the appropriate authenticator
         """
-
+        print("====== call authenticate =======")
         if isinstance(handler, LTIAuthenticateHandler):
             #self.authenticated_via = "lti"
             ret = await maybe_future(self.lti_authenticator.authenticate(handler, data))
@@ -184,7 +184,9 @@ class MultiAuthenticator(Authenticator):
 
         Make sure to enable auth_state, otherwise this function wont work.
         """
+        print("=========== pre_spawn_start =============")
         auth_state = await user.get_auth_state()
+        print(auth_state)
         if not auth_state:
             print("pre_spawn_start: auth_state not enabled")
             return  
@@ -198,16 +200,12 @@ class MultiAuthenticator(Authenticator):
             node["Labels"] = _node["Spec"]["Labels"]
             node["Role"] = _node["Spec"]["Role"]
             swarm_nodes.append(node)
-            
+        
         #group_names = [group.name for group in spawner.user.groups]
         #auth_state["scope"] in case of oid this is oid #"authenticated_via": self.authenticated_via, # TODO 
-        if "scope" in auth_state:
-            scope = auth_state["scope"]
-        else:
-            scope = "lti"
         spawner._custom_extra_config = { 
-            "auth_sate_scope":  scope, 
-            "swarm_nodes": swarm_nodes
+            "auth_state":  auth_state, 
+            "swarm_nodes": swarm_nodes,
         }
 
         spawner.environment = {

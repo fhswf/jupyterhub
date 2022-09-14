@@ -51,7 +51,9 @@ elif  os.environ['JUPYTERHUB_SPAWNERCLASS'] == 'dockerspawner.DockerSpawner':
     c.DockerSpawner.allowed_images = os.environ['DOCKER_JUPYTER_CONTAINERS'].split(",") 
 
 elif  os.environ['JUPYTERHUB_SPAWNERCLASS'] == 'modules.CustomSpawner.CustomSpawner':
-    c.Spawner.allowed_images = os.environ['DOCKER_JUPYTER_CONTAINERS'].split(",")
+    if "DOCKER_JUPYTER_CONTAINERS" in os.environ:
+        c.Spawner.allowed_images = os.environ['DOCKER_JUPYTER_CONTAINERS'].split(",")
+
     c.Spawner.debug = True
     network_name = os.environ['DOCKER_NETWORK_NAME']
     c.Spawner.network_name = network_name

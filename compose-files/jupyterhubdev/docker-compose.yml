@@ -18,11 +18,15 @@ services:
       #- DOCKER_SPAWN_ENVS=NVIDIA_VISIBLE_DEVICES:1
       - JUPYTERHUB_SPAWNERCLASS=modules.CustomSpawner.CustomSpawner
       - DOCKER_NETWORK_NAME=jupyterhub_swarm_network_dev
-      - HUB_IP=jupyterhubdev # same as serivce name
+      - HUB_IP=0.0.0.0 # same as serivce name or localhost
+      #- HUB_CONNECT_IP=jupyterhub_jupyterhub # address accessbile from the outside
       - HOST
+      - VOLUME_PATH_PREFIX=dev_userdata
+      #- LAB_HUB_API_URL=jupyterhub_jupyterhub
       - JUPYTERHUB_CRYPT_KEY=${JUPYTERHUB_CRYPT_KEY}
       - HUB_BASE_URL_PREFIX=${HUB_BASE_URL_PREFIX}
       
+
       - LTI_CLIENT_KEY=${LTI_CLIENT_KEY}
       - LTI_SHARED_SECRET=${LTI_SHARED_SECRET}
       - LTI13_PRIVATE_KEY=${LTI13_PRIVATE_KEY}
@@ -40,6 +44,7 @@ services:
       - OAUTH2_USERDATA_URL=${OAUTH2_INTERNAL_USERDATA_URL}
     networks:
       - traefik
+      - keycloak_sso_swarm
       - jupyterhub_swarm_network_dev
       #- local_keycloak
     #labels:
@@ -52,12 +57,12 @@ services:
         constraints:
           - node.role == manager
 networks:
-  traefik:
-    #name: traefik
+  keycloak_sso_swarm:
+    driver: overlay
     external: true
   jupyterhub_swarm_network_dev:
     driver: overlay
     external: true
     attachable: true
-  #local_keycloak:
-  #  external: true
+  traefik:
+    external: true
