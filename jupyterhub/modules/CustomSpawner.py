@@ -77,7 +77,8 @@ class CustomSpawner(SwarmSpawner):
         try:
             if len(self._images) > 0:
                 for i in self._images:
-                    _allowed_images.update({i["RepoTags"][0]:i["RepoTags"][0]})
+                    if i["RepoTags"][0] != "<none>:<none>":
+                        _allowed_images.update({i["RepoTags"][0]:i["RepoTags"][0]})
         except:
             pass
         allowed_images = self._get_allowed_images()
@@ -125,11 +126,17 @@ class CustomSpawner(SwarmSpawner):
         """.format(image_options=image_options, gpu_options=gpu_options)
 
 
-    def _custom_options_form(self, _images):
+    def _custom_options_form(self, _images, id_filter=None):
         print("===== call _custom_options_form ======")
         images = []
         for i in _images:
-             images.append(i["RepoTags"][0])
+            if i["RepoTags"][0] == "<none>:<none>":
+                continue
+            if id_filter:
+                if i["Labels"]["fhswf.jupyterhub.moodle.course.id"] == id_filter:
+                    images.append(i["RepoTags"][0])
+            else:
+                images.append(i["RepoTags"][0])
                     
         image_option_t = '<option value="{image}" {selected}>{image}</option>'
         image_options = [
@@ -149,10 +156,7 @@ class CustomSpawner(SwarmSpawner):
 
     async def call_options_form(self, default_form):
         print("====== call call_options_form =======")
-        allowed_images = self._get_allowed_images()
-        print(allowed_images)
         auth_state = await self.user.get_auth_state()
-        print(auth_state)
         images = []
         _images = await self.docker("images", filters={"label":"fhswf.jupyterhub.runtime"})
         if isinstance(_images, list):
@@ -162,37 +166,43 @@ class CustomSpawner(SwarmSpawner):
             if isinstance(_images, Image):
                 images.append(_images)
         self._images = images
+
+        def _default_image_select(id_filter=None):
+            if len(images) > 0:
+                return self._custom_options_form(images, id_filter)
+            else:
+                return default_form
+
         if "lti_version" in auth_state and auth_state["lti_version"].startswith("LTI"):
             if "context_id" in auth_state:
                 course_id = auth_state["context_id"]
                 self._lti_course_id = course_id
-                image_names = [a for a in images if "Labels" in a and a["Labels"] is not None and a["Labels"]["fhswf.jupyterhub.moodle.course.id"] == course_id]
+                # find all iamges with courseid still 
+                image_names = [a for a in images if 
+                        "Labels" in a and 
+                        a["Labels"] is not None and 
+                        a["Labels"]["fhswf.jupyterhub.moodle.course.id"] == course_id and 
+                        a["RepoTags"][0] != "<none>:<none>" and
+                        "fhswf.jupyterhub.runtime" in a["Labels"].keys()]
+
                 if len(image_names) == 1:
                     self.image =  image_names[0]["RepoTags"][0]
-                    if "fhswf.jupyterhub.runtime" not in image_names[0]["Labels"].keys():
-                        raise web.HTTPError(500, "Could not resolve docker image, image with courseid is not labeled with runtime")
                     if image_names[0]["Labels"]["fhswf.jupyterhub.runtime"] == "NVIDIA-GPU":
                         self._use_gpu = True
                     elif image_names[0]["Labels"]["fhswf.jupyterhub.runtime"] == "CPU":
                         self._use_gpu = False
                     else:
                         self._use_gpu = False
-                elif len(image_names) == 0:
-                    raise web.HTTPError(500, "Could not resolve docker image, courseid not found")
+                    return ''
+                elif len(image_names) > 1:
+                    return _default_image_select(id_filter=course_id)
                 else:
-                    raise web.HTTPError(500, "Could not resolve docker image, courseid label ambiguous")
-                return ''
+                    return _default_image_select()
             else:
-                if len(images) > 0:
-                    return self._custom_options_form(images)
-                else:
-                    return default_form
+                return _default_image_select()
             
         elif "scope" in auth_state and "openid" in auth_state["scope"]: 
-            if len(images) > 0:
-                return self._custom_options_form(images)
-            else:
-                return default_form
+            return _default_image_select()
 
         else:
             raise web.HTTPError(405, "Could not determine login type")
@@ -270,7 +280,8 @@ class CustomSpawner(SwarmSpawner):
                     os.chown(mount_point, uid, gid)
                     os.chmod(mount_point, 0o775)
 
-        if "yes" in self.user_options["gpu"] or self._use_gpu:
+        # TODO redo form and then change this...
+        if self.user_options is not None and "gpu" in self.user_options and "yes" in self.user_options["gpu"] or self._use_gpu:
             gpus = {} 
             for swarm_node in spawner._custom_extra_config["swarm_nodes"]:
                 id = swarm_node["ID"]
