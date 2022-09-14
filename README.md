@@ -36,7 +36,7 @@ When logging in via Moodle LTI, i.e. via a link in a course, a course id gets tr
 ```
 You can create a new Version of any image an give it a label with a single command:
 ```bash
-    echo "FROM registry.io/image:tag | sudo docker build --label fhswf.jupyterhub.moodle.course.id="8161" -t "registry.io/image:moodlecourse-16385" -
+    echo "FROM registry.io/image:tag | sudo docker build --label fhswf.jupyterhub.moodle.course.id="8161" -t "registry.io/image:moodlecourse-8161" -
 ```
 The image has to present on all cluster nodes. So either run this command on all nodes or export and import the newly labeled image.
 ## Contributing
