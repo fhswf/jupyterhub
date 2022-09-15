@@ -282,7 +282,7 @@ class CustomSpawner(SwarmSpawner):
                     os.chmod(mount_point, 0o775)
                 if spawner.volumes[key].startswith("/home/") and not spawner.volumes[key] == "/home/jovyan/work":
                     work_dir_link = os.path.join(mount_point, "notebooks")
-                    if not os.path.exists(work_dir_link):
+                    if not os.path.islink(work_dir_link):
                         os.symlink('/home/jovyan/work/', work_dir_link)
 
         # TODO redo form and then change this...
