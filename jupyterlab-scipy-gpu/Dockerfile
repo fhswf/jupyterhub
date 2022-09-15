@@ -42,3 +42,7 @@ RUN echo CPATH="${CPATH}" >> /etc/environment
 USER $NB_UID
 
 ENV CPATH=$CONDA_DIR/include:$CPATH
+
+# the label fhswf.jupyterhub.runtime has to be present for runtime detection of available images 
+LABEL fhswf.jupyterhub.runtime="NVIDIA-GPU"
+LABEL fhswf.jupyterhub.moodle.course.id="8161"
