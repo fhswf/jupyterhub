@@ -269,6 +269,7 @@ class CustomSpawner(SwarmSpawner):
             
 
         for key, value in spawner.volumes.items():
+            # replace mount targets placeholders
             spawner.volumes[key] = self.format_string(value)
             mount_point = spawner.format_volume_name(key, self)
             # absolute bind poath start with /
@@ -279,6 +280,10 @@ class CustomSpawner(SwarmSpawner):
                     gid = grp.getgrnam("users").gr_gid
                     os.chown(mount_point, uid, gid)
                     os.chmod(mount_point, 0o775)
+                if spawner.volumes[key].startswith("/home/") and not spawner.volumes[key] == "/home/jovyan/work":
+                    work_dir_link = os.path.join(mount_point, "notebooks")
+                    if not os.path.exists(work_dir_link):
+                        os.symlink('/home/jovyan/work/', work_dir_link)
 
         # TODO redo form and then change this...
         if self.user_options is not None and "gpu" in self.user_options and "yes" in self.user_options["gpu"] or self._use_gpu:
