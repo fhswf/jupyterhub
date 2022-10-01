@@ -58,7 +58,7 @@ elif  os.environ['JUPYTERHUB_SPAWNERCLASS'] == 'modules.CustomSpawner.CustomSpaw
     c.Spawner.debug = True
     network_name = os.environ['DOCKER_NETWORK_NAME']
     c.Spawner.network_name = network_name
-    c.Spawner.extra_host_config = {'network_mode': network_name}
+    c.Spawner.extra_host_config = {'network_mode': network_name, 'ipc': 'host'}
    
 
 else:
