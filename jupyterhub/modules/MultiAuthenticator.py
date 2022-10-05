@@ -39,12 +39,14 @@ class MultiLoginHandler(LoginHandler):
                 'label': 'Keycloak',
                 'login_url': '{}://{}{}keycloak/login?next={}'.format(self.request.protocol, self.request.host, self.hub.base_url, url_escape(nextval)),
                 'enabled': self.authenticator.enable_keycloak,
+                'visible': True
             },
             {
                 'name': 'lti',
                 'label': 'Moodle',
                 'login_url': 'https://elearning.fh-swf.de'.format(self.request.protocol, self.request.host, self.hub.base_url, url_escape(nextval)),
                 'enabled': self.authenticator.enable_lti,
+                'visible': False
             },
         ]
 

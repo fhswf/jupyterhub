@@ -13,7 +13,6 @@ from modules.CustomSpawner import CustomSpawner
 
 c.JupyterHub.admin_access = True
 c.JupyterHub.template_paths = ['templates']
-c.JupyterHub.logo_file = '/usr/local/share/jupyter/hub/static/images/logo.jpeg'
 c.Application.log_level = "DEBUG"
 c.JupyterHub.log_level = logging.DEBUG
 
