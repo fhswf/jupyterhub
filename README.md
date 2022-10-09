@@ -68,6 +68,8 @@ To generate a random key, use the following command (linux):
 
 ### Moodle
 
+To configure your moodle for lti authentication, see the official moodle documentations [<here>](https://docs.moodle.org/400/de/LTI-Authentifizierung).
+
 ## Deployment
 
 ## Dockerimages
