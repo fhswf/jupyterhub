@@ -33,35 +33,35 @@ A Juptyer Notebook server will always shutdown on logout.
 
 ### Environment Variables
 |Variable|Value|
-|-|-|-|
-||||
-|<b>OAuth</b>| ||
-| OAUTH2_TLS_VERIFY | 0 ||
-| OAUTH_CLIENT_ID | jupyterhub | |
-| OAUTH_CLIENT_SECRET | \<hidden> | |
-| OAUTH2_AUTHORIZE_URL | url to keycloak openid-connect auth | |
-| OAUTH2_INTERNAL_TOKEN_URL | url to keycloak openid-connect token internal (e.g. http://keycloak:8080/keycloak/realms/\<realm>/protocol/openid-connect/token) | |
-| OAUTH_CALLBACK_URL | url to keycloak openid-connect callback | |
-| OAUTH2_INTERNAL_USERDATA_URL | url to keycloak openid-connect userinfo internal (e.g. http://keycloak:8080/keycloak/realms/\<realm>/protocol/openid-connect/userinfo) | |
-||||
-|<b>General</b>| | |
-| COMPOSE_PROJECT_NAME | jupyterhub | |
-| HOST | jupiter.fh-swf.de | |
-| JUPYTERHUB_CRYPT_KEY | \<hidden> | |
-| HUB_BASE_URL_PREFIX | /newhub | |
-| JUPYTERHUB_IMAGE | jupyterhub_testimg:latest | |
-| SPAWNER_CPU_LIMIT | 16 | |
-| SPAWNER_MEM_LIMIT | 40G | |
-||||
-|<b>LTI</b>| | |
-| LTI_CLIENT_KEY | \<hidden> | |
-| LTI_SHARED_SECRET | \<hidden> | |
-||||
-|<b>Deprecated</b>| | |
-| KEYCLOAK_LOGOUT_URL | \<deprecated> ||
-| LTI13_PRIVATE_KEY | \<deprecated> ||
-| OAUTH2_TOKEN_URL | url to keycloak openid-connect token \<deprecated> | |
-| OAUTH2_USERDATA_URL | url to keycloak openid-connect userinfo \<deprecated> | |
+|-|-|
+|||
+|<b>OAuth</b>| |
+| OAUTH2_TLS_VERIFY | 0 |
+| OAUTH_CLIENT_ID | jupyterhub |
+| OAUTH_CLIENT_SECRET | \<hidden> |
+| OAUTH2_AUTHORIZE_URL | url to keycloak openid-connect auth |
+| OAUTH2_INTERNAL_TOKEN_URL | url to keycloak openid-connect token internal (e.g. http://keycloak:8080/keycloak/realms/\<realm>/protocol/openid-connect/token) |
+| OAUTH_CALLBACK_URL | url to keycloak openid-connect callback |
+| OAUTH2_INTERNAL_USERDATA_URL | url to keycloak openid-connect userinfo internal (e.g. http://keycloak:8080/keycloak/realms/\<realm>/protocol/openid-connect/userinfo) |
+|||
+|<b>General</b>| |
+| COMPOSE_PROJECT_NAME | jupyterhub |
+| HOST | jupiter.fh-swf.de |
+| JUPYTERHUB_CRYPT_KEY | \<hidden> |
+| HUB_BASE_URL_PREFIX | /newhub |
+| JUPYTERHUB_IMAGE | jupyterhub_testimg:latest |
+| SPAWNER_CPU_LIMIT | 16 |
+| SPAWNER_MEM_LIMIT | 40G |
+|||
+|<b>LTI</b>| |
+| LTI_CLIENT_KEY | \<hidden> |
+| LTI_SHARED_SECRET | \<hidden> |
+|||
+|<b>Deprecated</b>| |
+| KEYCLOAK_LOGOUT_URL | \<deprecated> |
+| LTI13_PRIVATE_KEY | \<deprecated> |
+| OAUTH2_TOKEN_URL | url to keycloak openid-connect token \<deprecated> |
+| OAUTH2_USERDATA_URL | url to keycloak openid-connect userinfo \<deprecated> |
 
 To generate a random key, use the following command (linux):
 > <command>openssl rand -base64 32</command>
