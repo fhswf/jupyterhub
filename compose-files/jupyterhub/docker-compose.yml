@@ -11,7 +11,7 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - /mnt/nfs_share/docker/jupyterhub:/mnt/nfs_share/docker/jupyterhub
-#      - /var/data/jupyterhub:/srv/jupyterhub
+    #      - /var/data/jupyterhub:/srv/jupyterhub
     environment:
       #- DOCKER_JUPYTER_CONTAINER=jupyterlab_img
       - DOCKER_JUPYTER_CONTAINERS=jupyterlab_testimg,ghcr.io/fhswf/jupyterhub/jupyterlab-scipy-gpu:main,ghcr.io/fhswf/jupyterhub/jupyterlab-scipy-cpu:main
@@ -24,7 +24,10 @@ services:
       - LAB_HUB_API_URL=jupyterhub_jupyterhub
       - JUPYTERHUB_CRYPT_KEY=${JUPYTERHUB_CRYPT_KEY}
       - HUB_BASE_URL_PREFIX=${HUB_BASE_URL_PREFIX}
-      
+
+      - SPAWNER_CPU_LIMIT=${SPAWNER_CPU_LIMIT}
+      - SPAWNER_MEM_LIMIT=${SPAWNER_MEM_LIMIT}
+
       - LTI_CLIENT_KEY=${LTI_CLIENT_KEY}
       - LTI_SHARED_SECRET=${LTI_SHARED_SECRET}
       - LTI13_PRIVATE_KEY=${LTI13_PRIVATE_KEY}
@@ -33,7 +36,7 @@ services:
 
       - OAUTH2_TLS_VERIFY=${OAUTH2_TLS_VERIFY}
       - OAUTH2_AUTHORIZE_URL=${OAUTH2_AUTHORIZE_URL}
-      # because here we have communicate internally, "jupiter.fh-swf.de" gets block by fh-swf rev. proxy 
+      # because here we have communicate internally, "jupiter.fh-swf.de" gets block by fh-swf rev. proxy
       - OAUTH2_TOKEN_URL=${OAUTH2_INTERNAL_TOKEN_URL}
       #- OAUTH2_TOKEN_URL=${OAUTH2_TOKEN_URL}
       - OAUTH_CLIENT_ID=${OAUTH_CLIENT_ID}

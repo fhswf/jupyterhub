@@ -113,8 +113,17 @@ c.DockerSpawner.extra_host_config = {
 #===========================================================================
 #                            Other Configuration
 #===========================================================================
-c.Spawner.cpu_limit = 16
-c.Spawner.mem_limit = '40G'
+if "SPAWNER_CPU_LIMIT" in os.environ:
+    c.Spawner.cpu_limit = os.environ['SPAWNER_CPU_LIMIT']
+else:
+    c.Spawner.cpu_limit = 16
+    print('SPAWNER_CPU_LIMIT not set in .env file')
+
+if "SPAWNER_MEM_LIMIT" in os.environ:
+    c.Spawner.mem_limit = os.environ['SPAWNER_MEM_LIMIT']
+else:
+    c.Spawner.mem_limit = '40G'
+    print('SPAWNER_MEM_LIMIT not set in .env file')
 
 c.JupyterHub.load_roles = [
     {
