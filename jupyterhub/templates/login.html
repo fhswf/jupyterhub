@@ -27,37 +27,114 @@ block main %}
 	#login-section {
 		display: flex;
 		width: 100%;
-		height: 80vh;
-		justify-content: center;
+		min-height: 90vh;
 		align-items: center;
+		flex-direction: column;
+		flex-wrap: nowrap;
+	}
+
+	#login-section hr {
+		width: 280px;
+		border: none;
+		outline: none;
+		height: 1px;
+		background: var(--clr-gray-dark);
+		margin-bottom: 2em;
+		position: relative;
+	}
+
+	.login-title {
+		max-width: 700px;
+		padding-inline: 2em;
+		margin-top: 2em;
+	}
+
+	.login-title .highlight {
+		color: var(--clr-primary);
+	}
+
+	.login-title h2 {
+		text-align: center;
+		line-height: 1.5em;
+	}
+
+	.login-title p {
+		margin-top: 2em;
+		font-size: 1.15em;
+	}
+
+	.login-title p span {
+		color: var(--clr-secondary);
 	}
 
 	.btn-login {
-		margin: 20px;
-		border: 1px solid var(--clr-primary);
+		appearance: none;
+		border: 2px solid var(--clr-gray-dark);
+		outline: none;
 		background: white;
+		border-radius: 40px;
+		padding: 15px 30px;
+		width: 200px;
+		cursor: pointer;
+		transition: all 0.1s;
+		color: black;
+	}
+
+	.btn-login span {
+		font-size: 0.85em;
+	}
+
+	.btn-login p {
+		margin: 0;
+		font-size: 1.05em;
+		margin-bottom: 4px;
+		color: var(--clr-primary);
+		transition: all 0.1s;
+	}
+
+	.btn-login:hover p {
 		color: black;
 	}
 
 	.btn-login:hover {
-		color: var(--clr-primary);
-		border: 1px solid var(--clr-primary);
-		background: white;
+		border: 2px solid var(--clr-primary);
 	}
 
-	.btn-highlighted {
+	.btn-login.highlight {
 		border: 2px solid var(--clr-secondary);
-		background: white;
-		padding: 19px 25px;
-		font-size: 20px;
-		color: black;
-		border-radius: 40px;
 	}
 
-	.btn-highlighted:hover {
+	.btn-login.highlight:hover {
+		box-shadow: 0px 0px 10px 0px var(--clr-gray-dark);
+	}
+
+	.btn-login.highlight p {
 		color: var(--clr-secondary);
-		border: 2px solid var(--clr-secondary);
-		background: white;
+	}
+
+	.btn-login.highlight span {
+		transition: all 0.1s;
+	}
+
+	.btn-login.highlight:hover span {
+		color: var(--clr-secondary);
+	}
+
+	.login-buttons {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		gap: 40px;
+		flex-wrap: wrap;
+	}
+
+	.login-footer {
+		width: 100%;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		padding-block: 4em;
+		margin-top: auto;
 	}
 </style>
 
@@ -66,25 +143,48 @@ block main %}
 	id="login-section"
 	class="container"
 >
-	{% if custom_html %} {{ custom_html | safe }} {% elif multiauth %} {% for
-	oauth in multiauth %} {% if oauth['enabled'] and oauth['visible'] %} {%if
-	oauth['highlighted'] %}
-	<a
-		role="button"
-		class="btn btn-lg btn-login btn-highlighted"
-		href='{{oauth["login_url"]}}'
-	>
-		{{ oauth['label'] }} Login
-	</a>
-	{% else %}
-	<a
-		role="button"
-		class="btn btn-lg btn-login"
-		href='{{oauth["login_url"]}}'
-	>
-		{{ oauth['label'] }} Login
-	</a>
-	{% endif %} {% endif %} {% endfor %} {% else %}
+	<header class="login-title">
+		<h2>
+			Willkommen, auf der Login Seite des<br /><span class="highlight"
+				>Clusters</span
+			><br />der Fachhochschule Südwestfalen!
+		</h2>
+		<p>
+			Bitte wählen Sie eine der unten stehenden Anmeldeoption, um
+			fortzufahren.<br />
+			Um sich mit der <span class="clr-primary">FH Kennung</span> einzuloggen,
+			sollte der
+			<span class="clr-secondary">SSO Login</span>
+			verwendet werden.
+		</p>
+	</header>
+
+	<hr />
+
+	<div class="login-buttons">
+		{% if custom_html %} {{ custom_html | safe }} {% elif multiauth %} {% for
+		oauth in multiauth %} {% if oauth['enabled'] and oauth['visible'] %} {%if
+		oauth['highlighted'] %}
+		<a
+			role="button"
+			class="btn btn-lg btn-login highlight"
+			href='{{oauth["login_url"]}}'
+		>
+			<p>{{ oauth['label'] }}</p>
+			<span>{{ oauth['sub_label'] }}</span>
+		</a>
+		{% else %}
+		<a
+			role="button"
+			class="btn btn-lg btn-login"
+			href='{{oauth["login_url"]}}'
+		>
+			<p>{{ oauth['label'] }}</p>
+			<span>{{ oauth['sub_label'] }}</span>
+		</a>
+		{% endif %} {% endif %} {% endfor %} {% else %}
+	</div>
+
 	<form
 		action="{{login_url}}?next={{next}}"
 		method="post"
@@ -135,6 +235,9 @@ block main %}
 	</form>
 	{% endif %}
 </div>
+<footer class="login-footer">
+	<a href="https://jupiter.fh-swf.de">Impressum / Kontakt</a>
+</footer>
 {% endblock login %} {% endblock %} {% block script %} {{ super() }}
 <script>
 	if (window.location.protocol === 'http:') {
