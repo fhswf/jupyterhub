@@ -36,7 +36,8 @@ class MultiLoginHandler(LoginHandler):
         context = [
             {
                 'name': 'keycloak',
-                'label': 'Cluster',
+                'label': 'Cluster Login',
+                'sub_label': '(über Keycloak)',
                 'login_url': '{}://{}{}keycloak/login?next={}'.format(self.request.protocol, self.request.host, self.hub.base_url, url_escape(nextval)),
                 'enabled': self.authenticator.enable_keycloak,
                 'visible': True,
@@ -44,7 +45,8 @@ class MultiLoginHandler(LoginHandler):
             },
             {
                 'name': 'sso',
-                'label': 'SSO',
+                'label': 'SSO Login',
+                'sub_label': '(über FH Kennung)',
                 'login_url': '{}://{}{}keycloak/login?next={}'.format(self.request.protocol, self.request.host, self.hub.base_url, url_escape(nextval)),
                 'enabled': self.authenticator.enable_keycloak,
                 'visible': True,
@@ -53,6 +55,7 @@ class MultiLoginHandler(LoginHandler):
             {
                 'name': 'lti',
                 'label': 'Moodle',
+                'sub_label': '(über Moodle)',
                 'login_url': 'https://elearning.fh-swf.de'.format(self.request.protocol, self.request.host, self.hub.base_url, url_escape(nextval)),
                 'enabled': self.authenticator.enable_lti,
                 'visible': False,
