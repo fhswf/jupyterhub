@@ -54,6 +54,13 @@ title.replace(' ', '-').lower() %} {% set btn_label = btn_label or title %}
 	<head>
 		<meta charset="utf-8" />
 
+		{% if kc_login_url %}
+		<meta
+			http-equiv="refresh"
+			content="1; URL={{kc_login_url}}"
+		/>
+		{% endif %}
+
 		<title>{% block title %}JupyterHub{% endblock %}</title>
 		<meta
 			http-equiv="X-UA-Compatible"
