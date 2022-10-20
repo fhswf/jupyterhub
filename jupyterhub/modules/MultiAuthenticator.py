@@ -36,36 +36,28 @@ class MultiLoginHandler(LoginHandler):
         context = [
             {
                 'name': 'keycloak',
-                'label': 'Cluster Login',
-                'sub_label': '(über Keycloak)',
                 'login_url': '{}://{}{}keycloak/login?next={}'.format(self.request.protocol, self.request.host, self.hub.base_url, url_escape(nextval)),
                 'enabled': self.authenticator.enable_keycloak,
                 'visible': True,
-                'highlighted': False
             },
             {
                 'name': 'sso',
-                'label': 'SSO Login',
-                'sub_label': '(über FH Kennung)',
                 'login_url': '{}://{}{}keycloak/login?next={}'.format(self.request.protocol, self.request.host, self.hub.base_url, url_escape(nextval)),
                 'enabled': self.authenticator.enable_keycloak,
                 'visible': True,
-                'highlighted': True
             },
             {
                 'name': 'lti',
-                'label': 'Moodle',
-                'sub_label': '(über Moodle)',
                 'login_url': 'https://elearning.fh-swf.de'.format(self.request.protocol, self.request.host, self.hub.base_url, url_escape(nextval)),
                 'enabled': self.authenticator.enable_lti,
                 'visible': False,
-                'highlighted': False
             },
         ]
 
         return await self.render_template("login.html",
             multiauth=context,
             login_error=login_error,
+            kc_login_url='{}://{}{}keycloak/login?next={}'.format(self.request.protocol, self.request.host, self.hub.base_url, url_escape(nextval)),
         )
 
     async def get(self):
