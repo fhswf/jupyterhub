@@ -54,6 +54,13 @@ title.replace(' ', '-').lower() %} {% set btn_label = btn_label or title %}
 	<head>
 		<meta charset="utf-8" />
 
+		{% if kc_login_url %}
+		<meta
+			http-equiv="refresh"
+			content="1; URL={{kc_login_url}}"
+		/>
+		{% endif %}
+
 		<title>{% block title %}JupyterHub{% endblock %}</title>
 		<meta
 			http-equiv="X-UA-Compatible"
@@ -157,6 +164,10 @@ title.replace(' ', '-').lower() %} {% set btn_label = btn_label or title %}
 				border-radius: 2px;
 				margin: 1em;
 			}
+			.navbar-default {
+				background-color: white;
+				border-color: #e7e7e7;
+			}
 		</style>
 
 		<noscript>
@@ -177,7 +188,7 @@ title.replace(' ', '-').lower() %} {% set btn_label = btn_label or title %}
 					>
 						<a href="{{logo_url or base_url}}"
 							><img
-								src="https://www.fh-swf.de/media/neu_np/hv_5/download_15/intern_14/logo_3/rgb/FH-SWF_Logo-RGB_1_png.png"
+								src="https://www.fh-swf.de/media/_tech__fhswf/layout__fhswf/images__fhswf/Logo.png"
 								alt="JupyterHub"
 								class="jpy-logo"
 								title="Home"
