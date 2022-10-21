@@ -20,6 +20,7 @@ c.Spawner.default_url = '/lab'
 c.JupyterHub.base_url = os.environ['HUB_BASE_URL_PREFIX'] + "/"
 
 c.Authenticator.admin_users = {"admin"}
+c.Authenticator.logout_redirect_url = os.environ['KEYCLOAK_LOGOUT_URL']
 
 # Enable auth state to pass the authentication dictionary
 # auth_state to the spawner
