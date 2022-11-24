@@ -83,6 +83,25 @@ You can create a new Version of any image an give it a label with a single comma
     echo "FROM registry.io/image:tag | sudo docker build --label fhswf.jupyterhub.moodle.course.id="8161" -t "registry.io/image:moodlecourse-8161" -
 ```
 The image has to present on all cluster nodes. So either run this command on all nodes or export and import the newly labeled image.
+
+### Extend Images
+
+To create new images based on the exsisting ones in this repo create a new Dockerfile and use the exsisting Image (for example ghcr.io/fhswf/jupyterhub/jupyterlab-scipy-gpu:main) as a base.
+
+This Dockerfile would add open-ai gym to the exsisting torch notebook from this repo and assign it to moodle course id 8161:
+```Dockerfile
+FROM ghcr.io/fhswf/jupyterhub/jupyterlab-scipy-gpu:main
+
+RUN pip install gym[all]
+
+LABEL fhswf.jupyterhub.moodle.course.id="8161"
+``` 
+With the Dockerfile present in the current directory run:
+```bash
+sudo docker build . -t "myimage:moodlecourse-8161" 
+```
+Currently there is no automated pulling avaiable, so this build needs to be repeated on every (gpu-)node in the cluster. 
+
 ## Contributing
 ## License (MIT)
 
