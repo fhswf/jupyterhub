@@ -18,8 +18,8 @@ services:
   keycloak:
     image: quay.io/keycloak/keycloak:latest
     # only required if database is not persisted
-    #volumes:
-    #  - /opt/keycloak/data:/opt/keycloak/data
+    volumes:
+      - /opt/keycloak/themes/fhswf/:/opt/keycloak/themes/fhswf
     depends_on:
       - postgres
     environment:
