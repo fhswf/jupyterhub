@@ -7,9 +7,9 @@ import docker
 
 from modules.CustomSpawner import CustomSpawner
 
-#===========================================================================
+# ===========================================================================
 #                            General Configuration
-#===========================================================================
+# ===========================================================================
 
 c.JupyterHub.admin_access = True
 c.JupyterHub.template_paths = ['templates']
@@ -30,12 +30,13 @@ c.Authenticator.enable_auth_state = True
 c.JupyterHub.authenticator_class = MultiAuthenticator
 
 
-#===========================================================================
+# ===========================================================================
 #                            Docker Spawner Configuration
-#===========================================================================
+# ===========================================================================
 
 c.JupyterHub.spawner_class = os.environ['JUPYTERHUB_SPAWNERCLASS']
-print("Starting with Spawnerclass: {}".format(os.environ['JUPYTERHUB_SPAWNERCLASS']))
+print("Starting with Spawnerclass: {}".format(
+    os.environ['JUPYTERHUB_SPAWNERCLASS']))
 
 if os.environ['JUPYTERHUB_SPAWNERCLASS'] == "dockerspawner.SwarmSpawner":
     # c.SwarmSpawner.allowed_images = os.environ['DOCKER_JUPYTER_CONTAINERS'].split(",")
@@ -44,25 +45,29 @@ if os.environ['JUPYTERHUB_SPAWNERCLASS'] == "dockerspawner.SwarmSpawner":
     # c.SwarmSpawner.network_name = network_name
     # c.SwarmSpawner.extra_host_config = {'network_mode': network_name}
     # c.SwarmSpawner.extra_placement_spec = { 'constraints' : ['node.role==worker'] }
-    raise Exception("Please use modules.CustomSpawner.CustomSpawner instead of {}".format(os.environ['JUPYTERHUB_SPAWNERCLASS']))
+    raise Exception("Please use modules.CustomSpawner.CustomSpawner instead of {}".format(
+        os.environ['JUPYTERHUB_SPAWNERCLASS']))
 
-elif  os.environ['JUPYTERHUB_SPAWNERCLASS'] == 'dockerspawner.DockerSpawner':
+elif os.environ['JUPYTERHUB_SPAWNERCLASS'] == 'dockerspawner.DockerSpawner':
     c.DockerSpawner.network_name = os.environ['DOCKER_NETWORK_NAME']
     #c.DockerSpawner.image = os.environ['DOCKER_JUPYTER_CONTAINER']
-    c.DockerSpawner.allowed_images = os.environ['DOCKER_JUPYTER_CONTAINERS'].split(",") 
+    c.DockerSpawner.allowed_images = os.environ['DOCKER_JUPYTER_CONTAINERS'].split(
+        ",")
 
-elif  os.environ['JUPYTERHUB_SPAWNERCLASS'] == 'modules.CustomSpawner.CustomSpawner':
+elif os.environ['JUPYTERHUB_SPAWNERCLASS'] == 'modules.CustomSpawner.CustomSpawner':
     if "DOCKER_JUPYTER_CONTAINERS" in os.environ:
-        c.Spawner.allowed_images = os.environ['DOCKER_JUPYTER_CONTAINERS'].split(",")
+        c.Spawner.allowed_images = os.environ['DOCKER_JUPYTER_CONTAINERS'].split(
+            ",")
 
     c.Spawner.debug = True
     network_name = os.environ['DOCKER_NETWORK_NAME']
     c.Spawner.network_name = network_name
     c.Spawner.extra_host_config = {'network_mode': network_name, 'ipc': 'host'}
-   
+
 
 else:
-    raise Exception("illegal spawner class found in config {}".format(os.environ['JUPYTERHUB_SPAWNERCLASS']))
+    raise Exception("illegal spawner class found in config {}".format(
+        os.environ['JUPYTERHUB_SPAWNERCLASS']))
 
 
 if "DOCKER_PERSIST_NOTEBOOK" in os.environ.keys():
@@ -70,8 +75,8 @@ if "DOCKER_PERSIST_NOTEBOOK" in os.environ.keys():
 else:
     c.Spawner.remove = True
 
-c.Spawner.http_timeout=120
-c.Spawner.start_timeout=300
+c.Spawner.http_timeout = 120
+c.Spawner.start_timeout = 300
 
 # -> https://github.com/jupyterhub/dockerspawner/blob/master/examples/oauth/jupyterhub_config.py
 if "HUB_IP" in os.environ:
@@ -92,15 +97,16 @@ if "VOLUME_PATH_PREFIX" in os.environ:
 else:
     mount_prefix = "userdata"
 c.DockerSpawner.volumes = {
-    '/mnt/nfs_share/docker/jupyterhub/' + mount_prefix + '/jupyterhub-user-{username}/_data': notebook_dir, 
+    '/mnt/nfs_share/docker/jupyterhub/' + mount_prefix + '/jupyterhub-user-{username}/_data': notebook_dir,
     '/mnt/nfs_share/docker/jupyterhub/' + mount_prefix + '/jupyterhub-user-{username}/home_data': '/home/{username}',
-    '/mnt/nfs_share/docker/jupyterhub/data' : '/data/'
+    '/mnt/nfs_share/docker/jupyterhub/data': '/data/',
+    '/mnt/beegfs': '/beegfs/'
 }
-#c.Spawner.env_keep = ['LD_LIBRARY_PATH'] # set in DOCKERFILE of spawned container 
+# c.Spawner.env_keep = ['LD_LIBRARY_PATH'] # set in DOCKERFILE of spawned container
 
-#===========================================================================
+# ===========================================================================
 #                            GPU Stuff
-#===========================================================================
+# ===========================================================================
 # TODO make this dependend on user/moodle/group, also this does noting for swarm deployment
 c.DockerSpawner.extra_host_config = {
     "runtime": "nvidia",
@@ -112,9 +118,9 @@ c.DockerSpawner.extra_host_config = {
     ],
 }
 
-#===========================================================================
+# ===========================================================================
 #                            Other Configuration
-#===========================================================================
+# ===========================================================================
 if "SPAWNER_CPU_LIMIT" in os.environ:
     c.Spawner.cpu_limit = os.environ['SPAWNER_CPU_LIMIT']
 else:
