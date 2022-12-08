@@ -102,6 +102,7 @@ c.DockerSpawner.volumes = {
     '/mnt/nfs_share/docker/jupyterhub/data': '/data/',
     '/mnt/beegfs': '/beegfs/'
 }
+# TODO check if target exists and then import this into this dict, probably a good idea in the spawner
 if "EXTRA_MOUNT_POINTS" in os.environ:
     print("got extra mount points from env, reminder: do not use ',' or ':' in path. They are used to parse the string!")
     extra_mount_points = [a.split(":") for a in os.environ.get('EXTRA_MOUNT_POINTS').split(",")]
