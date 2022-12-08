@@ -98,9 +98,7 @@ else:
     mount_prefix = "userdata"
 c.DockerSpawner.volumes = {
     '/mnt/nfs_share/docker/jupyterhub/' + mount_prefix + '/jupyterhub-user-{username}/_data': notebook_dir,
-    '/mnt/nfs_share/docker/jupyterhub/' + mount_prefix + '/jupyterhub-user-{username}/home_data': '/home/{username}',
-    '/mnt/nfs_share/docker/jupyterhub/data': '/data/',
-    '/mnt/beegfs': '/beegfs/'
+    '/mnt/nfs_share/docker/jupyterhub/' + mount_prefix + '/jupyterhub-user-{username}/home_data': '/home/{username}'
 }
 # TODO check if target exists and then import this into this dict, probably a good idea in the spawner
 if "EXTRA_MOUNT_POINTS" in os.environ:
