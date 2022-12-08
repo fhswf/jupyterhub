@@ -106,7 +106,7 @@ if "EXTRA_MOUNT_POINTS" in os.environ:
     print("got extra mount points from env, reminder: do not use ',' or ':' in path. They are used to parse the string!")
     extra_mount_points = [a.split(":") for a in os.environ.get('EXTRA_MOUNT_POINTS').split(",")]
     for k, v in extra_mount_points:
-        c.DockerSpawner.update({k: v})
+        c.DockerSpawner.volumes.update({k: v})
 
 
 # c.Spawner.env_keep = ['LD_LIBRARY_PATH'] # set in DOCKERFILE of spawned container
