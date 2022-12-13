@@ -100,7 +100,7 @@ With the Dockerfile present in the current directory run:
 ```bash
 sudo docker build . -t "myimage:moodlecourse-8161" 
 ```
-Currently there is no automated pulling avaiable, so this build needs to be repeated on every (gpu-)node in the cluster. 
+Currently there is no automated pulling available, so this build needs to be repeated on every (gpu-)node in the cluster. 
 
 ## Contributing
 ## License (MIT)
