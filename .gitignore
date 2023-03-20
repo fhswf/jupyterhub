@@ -1,3 +1,4 @@
 *.env
+.venv
 public.pem
 private.pem
