@@ -5,7 +5,7 @@
 **[Contributing](#contributing)** |
 **[License](#license-mit)**
 
-# [Spawn Jupyterhub in dockercontainer](https://github.com/fhswf/jupyterhub)
+# [Jupyterhub with docker swarm and GPUs](https://github.com/fhswf/jupyterhub)
 
 [![Docker Image CI](https://github.com/fhswf/jupyterhub/actions/workflows/docker-image-ci.yml/badge.svg?branch=main)](https://github.com/fhswf/jupyterhub/actions/workflows/docker-image-ci.yml)
 [![GitHub](https://img.shields.io/badge/issue_tracking-github-blue?logo=github)](https://github.com/fhswf/jupyterhub/issues)
